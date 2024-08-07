@@ -1,25 +1,22 @@
+# Python Solution
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        freq = defaultdict(int)
-        freqMax = 0
-        for num in nums:
-            freq[num] += 1
-            freqMax = max(freqMax, freq[num])
-        buckets = [[float("-inf")]] * (freqMax+1)
-        for f in freq:
-            if buckets[freq[f]] == [float("-inf")]:
-                buckets[freq[f]] = [f]
-            else:
-                buckets[freq[f]].append(f)
-        res = []
-        for i in range(freqMax, -1, -1):
-            if k == 0:
-                break
-            if buckets[i] != [float("-inf")]:
-                if k - len(buckets[i]) >= 0:
-                    res.extend(buckets[i])
-                    k -= len(buckets[i])
-                else:
-                    res.extend(buckets[i][:k])
-                    k = 0
-        return res
+        # Step 1: Create a dictionary (`mp`) to store the frequency of each element in the array.
+        # Step 2: Create buckets to store elements based on their frequency.
+        buckets = [[] for i in range(len(nums) + 1)]
+        mp = {}
+        # Step 3: Iterate through the array to populate the `mp` dictionary.
+        for n in nums:
+            mp[n] = 1 + mp.get(n, 0)
+
+        # Step 4: Iterate through the items in `mp` and distribute elements into the corresponding buckets based on their frequency.
+        for n, c in mp.items():
+            buckets[c].append(n)
+
+        # Step 5: Iterate through the buckets from right to left (highest to lowest frequency) and append elements to the answer list until the desired k elements are collected.
+        ans = []
+        for i in range(len(buckets) - 1, 0, -1):
+            for n in buckets[i]:
+                ans.append(n)
+                if len(ans) == k:
+                    return ans
