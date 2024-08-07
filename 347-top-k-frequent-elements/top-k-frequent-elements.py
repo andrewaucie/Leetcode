@@ -12,7 +12,6 @@ class Solution:
             else:
                 buckets[freq[f]].append(f)
         res = []
-        print(buckets)
         for i in range(freqMax, -1, -1):
             if k == 0:
                 break
