@@ -12,8 +12,4 @@ class Solution:
                 sortedTuple = tuple(sorted([nums[i], nums[i]+k]))
                 if sortedTuple not in visitedPairs:
                     visitedPairs.add(sortedTuple)
-            # if nums[i] - k in indexMap and indexMap[nums[i]-k] != i:
-            #     sortedTuple = tuple(sorted([nums[i], nums[i]-k]))
-            #     if sortedTuple not in visitedPairs:
-            #         visitedPairs.add(sortedTuple)
         return len(visitedPairs)
