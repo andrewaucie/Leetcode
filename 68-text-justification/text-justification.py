@@ -1,5 +1,5 @@
 class Solution():
-    def fullJustify(self, words, maxWidth):
+    def fullJustify(self, words: List[str], maxWidth: int) -> List[str]:
         result = []
         line = []
         line_length = 0
