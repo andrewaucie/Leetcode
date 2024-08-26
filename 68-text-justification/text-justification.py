@@ -1,34 +1,33 @@
-class Solution(object):
-    def fullJustify(self, words, maxWidth):
+class Solution:
+    def fullJustify(self, words: List[str], maxWidth: int) -> List[str]:
         result = []
-        line = []
-        line_length = 0
+        cur_line = []
+        cur_len = 0
         
         for word in words:
-            if line_length + len(line) + len(word) > maxWidth:
+            if cur_len + len(word) + len(cur_line) > maxWidth:
                 # Justify the current line
-                spaces_to_add = maxWidth - line_length
-                if len(line) == 1:
-                    result.append(line[0] + ' ' * spaces_to_add)
+                num_spaces = maxWidth - cur_len
+                if len(cur_line) == 1:
+                    result.append(cur_line[0] + ' ' * num_spaces)
                 else:
-                    num_gaps = len(line) - 1
-                    spaces_per_gap = spaces_to_add // num_gaps
-                    extra_spaces = spaces_to_add % num_gaps
-                    justified_line = line[0]
-                    for i in range(1, len(line)):
-                        spaces = spaces_per_gap + (1 if i <= extra_spaces else 0)
-                        justified_line += ' ' * spaces + line[i]
+                    space_between_words = num_spaces // (len(cur_line) - 1)
+                    extra_spaces = num_spaces % (len(cur_line) - 1)
+                    justified_line = ''
+                    for i in range(len(cur_line) - 1):
+                        justified_line += cur_line[i] + ' ' * (space_between_words + (i < extra_spaces))
+                    justified_line += cur_line[-1]
                     result.append(justified_line)
                 
-                # Reset line and line_length
-                line = []
-                line_length = 0
-            
-            line.append(word)
-            line_length += len(word)
+                # Reset current line
+                cur_line = []
+                cur_len = 0
+                
+            cur_line.append(word)
+            cur_len += len(word)
         
-        # Left-justify the last line
-        last_line = ' '.join(line)
+        # Last line: left justify
+        last_line = ' '.join(cur_line)
         last_line += ' ' * (maxWidth - len(last_line))
         result.append(last_line)
         
