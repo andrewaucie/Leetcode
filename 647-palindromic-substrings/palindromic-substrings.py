@@ -1,15 +1,28 @@
 class Solution:
     def countSubstrings(self, s: str) -> int:
-        count = 0
-        for i in range(len(s)):
-            count += self.expandAroundCenter(s, i, i) # Odd Length palindrome
-            count += self.expandAroundCenter(s, i-1, i) # Even Length palindrome
-        return count
-    
-    def expandAroundCenter(self, s: str, l: int, r: int) -> int:
-        ps_count = 0
-        while l >= 0 and r < len(s) and s[l] == s[r]:
-            ps_count += 1
-            l -= 1
-            r += 1
-        return ps_count       
+        n = len(s)
+        ans = 0
+
+        if n <= 0:
+            return 0
+
+        dp = [[False] * n for _ in range(n)]
+
+        for i in range(n):
+            dp[i][i] = True
+            ans += 1
+
+        for i in range(n - 1):
+            dp[i][i + 1] = (s[i] == s[i + 1])
+            ans += dp[i][i + 1]
+
+        for length in range(3, n + 1):
+            i = 0
+            # Checking every possible substring of any specific length
+            for j in range(length - 1, len(s)):
+                dp[i][j] = dp[i + 1][j - 1] and (s[i] == s[j])
+                ans += dp[i][j]
+                i += 1
+
+        return ans
+
