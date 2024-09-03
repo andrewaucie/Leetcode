@@ -12,9 +12,8 @@ class Solution:
         
         topK = []
         for i in range(len(buckets)-1, 0, -1):
-            if len(topK) + len(buckets[i]) <= k:
-                topK.extend(buckets[i])
-            else:
-                leftover = k - len(topK)
-                topK.extend(buckets[i][:leftover])
+            for n in buckets[i]:
+                topK.append(n)
+                if len(topK) == k:
+                    return topK
         return topK
