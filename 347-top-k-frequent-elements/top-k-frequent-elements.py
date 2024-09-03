@@ -1,17 +1,20 @@
 # Python Solution
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        buckets = [[] for i in range(len(nums) + 1)]
+        buckets = [[] for _ in range(len(nums)+1)]
+
         mp = defaultdict(int)
-        for n in nums:
-            mp[n] += 1
-
-        for n, c in mp.items():
-            buckets[c].append(n)
-
-        ans = []
-        for i in range(len(buckets) - 1, 0, -1):
-            for n in buckets[i]:
-                ans.append(n)
-                if len(ans) == k:
-                    return ans
+        for num in nums:
+            mp[num] += 1
+        
+        for num, freq in mp.items():
+            buckets[freq].append(num)
+        
+        topK = []
+        for i in range(len(buckets)-1, 0, -1):
+            if len(topK) + len(buckets[i]) <= k:
+                topK.extend(buckets[i])
+            else:
+                leftover = k - len(topK)
+                topK.extend(buckets[i][:leftover])
+        return topK
