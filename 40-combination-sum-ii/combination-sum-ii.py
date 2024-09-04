@@ -8,9 +8,10 @@ class Solution:
                 return
             if combSum > target or index >= len(candidates):
                 return
-            comb.append(candidates[index])
-            backtrack(index+1, comb, combSum + candidates[index])
-            comb.pop()
+            if combSum + candidates[index] <= target:
+                comb.append(candidates[index])
+                backtrack(index+1, comb, combSum + candidates[index])
+                comb.pop()
             while index < len(candidates)-1 and candidates[index] == candidates[index+1]:
                 index += 1
             backtrack(index+1, comb, combSum)
