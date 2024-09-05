@@ -8,8 +8,9 @@ class Solution:
         # construct missing rolls
         divisor = missingAmount // n
         remainder = missingAmount % n
-        missing = [divisor] * (n - remainder)
-        if remainder != 0:
-            for _ in range(remainder):
-                missing.append(divisor+1)
+        missing = []
+        for _ in range(n):
+            missing.append(divisor)
+        for i in range(remainder):
+            missing[i] += 1
         return missing
