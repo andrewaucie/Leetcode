@@ -11,6 +11,6 @@ class Solution:
         remainder = missingAmount % n
         missing = [divisor] * (n - remainder)
         if remainder != 0:
-            missingRemainder = [divisor+1] * remainder
-            missing.extend(missingRemainder)
+            for _ in range(remainder):
+                missing.append(divisor+1)
         return missing
