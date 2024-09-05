@@ -1,21 +1,27 @@
-from typing import List
-
 class Solution:
     def partition(self, s: str) -> List[List[str]]:
-        def is_palindrome(sub: str) -> bool:
-            return sub == sub[::-1]
+        def isPalindrome(s):
+            left = 0
+            right = len(s)-1
+            while left <= right:
+                if s[left] != s[right]:
+                    return False
+                left += 1
+                right -= 1
+            return True
+
+        res = []
         
-        def backtrack(start: int, path: List[str]):
-            if start == len(s):
-                result.append(path[:])
+        def backtrack(index, substrings):
+            if index == len(s):
+                res.append(substrings)
                 return
-            for end in range(start + 1, len(s) + 1):
-                current_sub = s[start:end]
-                if is_palindrome(current_sub):
-                    path.append(current_sub)
-                    backtrack(end, path)
-                    path.pop()
-        
-        result = []
+            curr = ""
+            while index < len(s):
+                curr += s[index]
+                if isPalindrome(curr):
+                    backtrack(index+1, substrings + [curr])
+                index += 1
         backtrack(0, [])
-        return result
+        return res
+            
