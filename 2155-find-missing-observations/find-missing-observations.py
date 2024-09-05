@@ -5,7 +5,6 @@ class Solution:
         missingAmount = mean * length - sum(rolls)
         if not (1 <= missingAmount / n <= 6):
             return []
-        print(missingAmount)
         # construct missing rolls
         divisor = missingAmount // n
         remainder = missingAmount % n
