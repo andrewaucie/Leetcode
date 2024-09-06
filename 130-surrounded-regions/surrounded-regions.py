@@ -3,23 +3,35 @@ class Solution:
         """
         Do not return anything, modify board in-place instead.
         """
+        should_preserve = set()
+        m = len(board)
+        n = len(board[0])
 
-        def dfs(i,j,captured):
-            if i == 0 or i == len(board) - 1 or j == 0 or j == len(board[0])-1:
-                return False
-            captured.add((i,j))
-            direction = {(0,1),(1,0),(-1,0),(0,-1)}
-            for dx,dy in direction:
-                if 0 <= i+dx < len(board) and 0 <= j+dy < len(board[0]) and board[i+dx][j+dy] == "O" and (i+dx,j+dy) not in captured:
-                    if not dfs(i+dx,j+dy,captured):
-                        return False
-            return True
-            
-            
-        for i in range(len(board)):
-            for j in range(len(board[0])):
-                captured = set()
-                if board[i][j] == "O" and dfs(i,j,captured):
-                    for (x,y) in captured:
-                        board[x][y] = "X"
-        return
+        def preserve_connected(i, j, visited=None):
+            if visited is None:
+                visited = set([(i, j)])
+            sur = ((0, 1), (0, -1), (1, 0), (-1, 0))
+            for di, dj in sur:
+                ci, cj = di + i, dj + j
+                if 0 < ci < m-1 and 0 < cj < n-1 and (ci, cj) not in visited and board[ci][cj] == 'O':
+                    if (ci, cj) in should_preserve:
+                        continue
+                    should_preserve.add((ci, cj))
+                    preserve_connected(ci, cj, visited.union([(ci, cj)]))
+
+        for i in [0, m-1]:
+            for j in range(n):
+                if board[i][j] == 'O':
+                    should_preserve.add((i, j))
+                    preserve_connected(i, j)
+
+        for j in [0, n-1]:
+            for i in range(1, m-1):
+                if board[i][j] == 'O':
+                    should_preserve.add((i, j))
+                    preserve_connected(i, j)
+
+        for i in range(1, m-1):
+            for j in range(1, n-1):
+                if board[i][j] == 'O' and (i, j) not in should_preserve:
+                    board[i][j] = 'X'
