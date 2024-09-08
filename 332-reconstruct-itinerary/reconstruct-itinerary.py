@@ -3,9 +3,9 @@ class Solution:
         # Create graph based on tickets
         graph = defaultdict(list)
         remainingTickets = defaultdict(int)
+        tickets.sort()
         for depart, arrive in tickets:
             graph[depart].append(arrive)
-            graph[depart].sort()
             remainingTickets[(depart,arrive)] += 1
         
         ticketPaths = []
