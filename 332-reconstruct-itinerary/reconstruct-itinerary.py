@@ -1,36 +1,33 @@
-
 class Solution:
-    def __init__(self):
-        self.flight_graph = defaultdict(list)
-        self.itinerary = []
+    def findItinerary(self, tickets) -> list[str]:
+        # Initialize the flight graph using ticket information
+        flightGraph = defaultdict(list)
+        travelItinerary = []
 
-    # Depth-First Search to traverse the flight itinerary
-    def dfs(self, airport:str) -> None:
-        destinations = self.flight_graph[airport]
-
-        # Visit destinations in lexical order
-        while destinations:
-            next_destination = destinations.pop()
-            self.dfs(next_destination)
-
-        # Add the current airport to the itinerary after visiting all destinations
-        self.itinerary.append(airport)
-
-    def findItinerary(self, tickets: List[List[str]]) -> List[str]:
-        # Populate the flight graph using ticket information
         for ticket in tickets:
-            from_airport, to_airport = ticket
-
-            self.flight_graph[from_airport].append(to_airport)
+            fromAirport, toAirport = ticket[0], ticket[1]
+            flightGraph[fromAirport].append(toAirport)
 
         # Sort destinations in reverse order to visit lexical smaller destinations first
-        for destinations in self.flight_graph.values():
+        for destinations in flightGraph.values():
             destinations.sort(reverse=True)
 
-        # Start the DFS from the JFK airport
-        self.dfs("JFK")
+        dfsStack = ["JFK"]
+
+        while dfsStack:
+            # Get the current airport from the top of the stack
+            currentAirport = dfsStack[-1]
+            destinations = flightGraph.get(currentAirport, [])
+
+            if destinations:
+                # Choose the next destination (the one in lexicographically larger order)
+                nextDestination = destinations.pop()
+                dfsStack.append(nextDestination)
+            else:
+                # If there are no more destinations from the current airport, add it to the itinerary
+                travelItinerary.append(currentAirport)
+                dfsStack.pop()
 
         # Reverse the itinerary to get the correct order
-        self.itinerary.reverse()
-
-        return self.itinerary
+        travelItinerary.reverse()
+        return travelItinerary
