@@ -1,36 +1,36 @@
-class Solution:
-    def findItinerary(self, tickets: List[List[str]]) -> List[str]:
-        # Create graph based on tickets
-        graph = defaultdict(list)
-        remainingTickets = defaultdict(int)
-        tickets.sort()
-        for depart, arrive in tickets:
-            graph[depart].append(arrive)
-            remainingTickets[(depart,arrive)] += 1
-        
-        ticketPaths = []
-        # Run dfs. Track visited edges, current path, current airport
-        def dfs(airport, remaining, curr):
-            if len(curr) / 3 == len(tickets):
-                ticketPaths.append(curr)
-                return True
-            visited = set()
-            for arrive in graph[airport]:
-                if remaining[(airport, arrive)] > 0 and (airport, arrive) not in visited:
-                    visited.add((airport, arrive))
-                    remaining[(airport, arrive)] -= 1
-                    if dfs(arrive, remaining, curr + arrive):
-                        return True
-                    remaining[(airport, arrive)] += 1
-            return False
 
-        # Call dfs on "JFK"
-        dfs("JFK", remainingTickets, "")
-        if len(ticketPaths) == 0:
-            return []
-        ticketPaths.sort()
-        lowest = ticketPaths[0]
-        res = ["JFK"]
-        for i in range(0, len(lowest), 3):
-            res.append(lowest[i:i+3])
-        return res
+class Solution:
+    def __init__(self):
+        self.flight_graph = defaultdict(list)
+        self.itinerary = []
+
+    # Depth-First Search to traverse the flight itinerary
+    def dfs(self, airport:str) -> None:
+        destinations = self.flight_graph[airport]
+
+        # Visit destinations in lexical order
+        while destinations:
+            next_destination = destinations.pop()
+            self.dfs(next_destination)
+
+        # Add the current airport to the itinerary after visiting all destinations
+        self.itinerary.append(airport)
+
+    def findItinerary(self, tickets: List[List[str]]) -> List[str]:
+        # Populate the flight graph using ticket information
+        for ticket in tickets:
+            from_airport, to_airport = ticket
+
+            self.flight_graph[from_airport].append(to_airport)
+
+        # Sort destinations in reverse order to visit lexical smaller destinations first
+        for destinations in self.flight_graph.values():
+            destinations.sort(reverse=True)
+
+        # Start the DFS from the JFK airport
+        self.dfs("JFK")
+
+        # Reverse the itinerary to get the correct order
+        self.itinerary.reverse()
+
+        return self.itinerary
