@@ -11,19 +11,18 @@ class Solution:
         ticketPaths = []
         # Run dfs. Track visited edges, current path, current airport
         def dfs(airport, remaining, curr):
-            if len(ticketPaths) == 1:
-                return
             if len(curr) / 3 == len(tickets):
                 ticketPaths.append(curr)
-                return
+                return True
             visited = set()
             for arrive in graph[airport]:
                 if remaining[(airport, arrive)] > 0 and (airport, arrive) not in visited:
                     visited.add((airport, arrive))
                     remaining[(airport, arrive)] -= 1
-                    dfs(arrive, remaining, curr + arrive)
+                    if dfs(arrive, remaining, curr + arrive):
+                        return True
                     remaining[(airport, arrive)] += 1
-            return
+            return False
 
         # Call dfs on "JFK"
         dfs("JFK", remainingTickets, "")
