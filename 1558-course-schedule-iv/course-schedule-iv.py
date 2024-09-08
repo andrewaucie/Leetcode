@@ -1,32 +1,23 @@
 class Solution:
     def checkIfPrerequisite(self, numCourses: int, prerequisites: List[List[int]], queries: List[List[int]]) -> List[bool]:
-        abj={}
-        for i,j in prerequisites:
-            if i not in abj:
-                abj[i]=[j]
-            else:
-                abj[i].append(j)
-        def div(start,end):
-            vis=[]
-
-            def dfs(node):
-                if node==end:
-                    return True
-                if node not in abj:
-                    return False
-                if node in vis:
-                    return
-                vis.append(node)
-                for i in abj[node]:
-                    if dfs(i):
-                        return True
-                return False
-            return dfs(start)
-        res=[]
-        for start,end in queries:
-            if start in abj and div(start,end):
-                res.append(True)
-            else:
-                res.append(False)
-        return res
+        # Build reversed graph in topological sorted order
+        graph = {i : set() for i in range(numCourses)}
+        for prereq, course in prerequisites:
+            graph[prereq].add(course)
         
+
+        def dfs(curr, target, visited):
+            if curr == target:
+                return True
+
+            for nextCourse in graph[curr]:
+                if nextCourse not in visited:
+                    visited.add(nextCourse)
+                    if dfs(nextCourse, target, visited):
+                        return True
+            return False
+
+        res = []
+        for fromCourse, toCourse in queries:
+            res.append(dfs(fromCourse, toCourse, set()))
+        return res
