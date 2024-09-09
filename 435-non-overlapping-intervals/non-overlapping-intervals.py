@@ -4,7 +4,6 @@ class Solution:
         currInterval = 0
         nextInterval = 1
         res = 0
-        print(intervals)
         while nextInterval < len(intervals):
             if intervals[nextInterval][1] < intervals[currInterval][1]:
                 currInterval = nextInterval
