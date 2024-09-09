@@ -13,18 +13,13 @@ class Solution:
 
         temp = head
         x,y = 0,0
-        stuck = 0
         while temp:
             res[x][y] = temp.val
+            temp = temp.next
+            # Compute next position
             nextX, nextY = x + dirMap[d][0], y + dirMap[d][1]
-            if 0 <= nextX < m and 0 <= nextY < n and res[nextX][nextY] == -1:
-                temp = temp.next
-                x = nextX
-                y = nextY
-                stuck = 0
-            else:
+            if not (0 <= nextX < m and 0 <= nextY < n and res[nextX][nextY] == -1):
                 d = (d+1)%4
-                stuck += 1 
-                if stuck == 4:
-                    return res
+                nextX, nextY = x + dirMap[d][0], y + dirMap[d][1]
+            x,y = nextX, nextY
         return res
