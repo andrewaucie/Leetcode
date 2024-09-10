@@ -1,28 +1,48 @@
 class Solution:
     def countSubstrings(self, s: str) -> int:
-        n = len(s)
-        ans = 0
+        # Brute force
+        # def isPalindrome(left, right):
+        #     while left <= right and s[left] == s[right]:
+        #         left += 1
+        #         right -= 1
+        #     return left > right
+        
+        # res = 0
+        # for i in range(len(s)):
+        #     for j in range(i, len(s)):
+        #         if isPalindrome(i,j):
+        #             res += 1
+        # return res
 
-        if n <= 0:
-            return 0
+        # Expand around centers
+        def expand(left, right):
+            c = 0
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                left -= 1
+                right += 1
+                c += 1
+            return c
 
-        dp = [[False] * n for _ in range(n)]
+        res = 0
+        for i in range(len(s)):
+            odd = expand(i,i)
+            even = expand(i, i+1)
+            res += even + odd
+        return res
 
-        for i in range(n):
+        if len(s) == 1:
+            return 1
+        dp = [[False] * len(s) for _ in range(len(s))]
+        for i in range(len(s)):
             dp[i][i] = True
-            ans += 1
-
-        for i in range(n - 1):
-            dp[i][i + 1] = (s[i] == s[i + 1])
-            ans += dp[i][i + 1]
-
-        for length in range(3, n + 1):
-            i = 0
-            # Checking every possible substring of any specific length
-            for j in range(length - 1, len(s)):
-                dp[i][j] = dp[i + 1][j - 1] and (s[i] == s[j])
-                ans += dp[i][j]
-                i += 1
-
-        return ans
-
+            if i < len(s)-1:
+                dp[i][i+1] = True
+        count = len(s)
+        for i in range(len(s)):
+            for j in range(i+1, len(s)):
+                if dp[i+1][j-1] and s[i] == s[j]:
+                    dp[i][j] = True
+                    count += 1
+        return count
+        
+            
