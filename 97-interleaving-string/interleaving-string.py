@@ -1,19 +1,14 @@
 class Solution:
     def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
-        
-        memo = {}
-        def memoization(i1, i2, i3):
-            if i3 == len(s3) and i1 == len(s1) and i2 == len(s2):
-                return True
-            if i3 == len(s3) or (i1 == len(s1) and i2 == len(s2)):
-                return False
-            if (i1,i2,i3) in memo:
-                return memo[(i1,i2,i3)]
-            include1, include2 = False, False
-            if i1 < len(s1) and s1[i1] == s3[i3]:
-                include1 = memoization(i1+1, i2, i3+1)
-            if i2 < len(s2) and s2[i2] == s3[i3]:
-                include2 = memoization(i1, i2+1, i3+1)
-            memo[(i1,i2,i3)] = include1 or include2
-            return memo[(i1,i2,i3)]
-        return memoization(0,0,0)
+        if len(s1) + len(s2) != len(s3):
+            return False
+        dp = [[False] * (len(s2)+1) for _ in range(len(s1)+1)]
+        # dp(i,j) = can interleave up to index (i,j) for (s1,s2) respectively (exclusive)
+        dp[len(s1)][len(s2)] = True
+        for i in range(len(s1), -1, -1):
+            for j in range(len(s2), -1, -1):
+                if i < len(s1) and s1[i] == s3[i+j] and dp[i+1][j]:
+                    dp[i][j] = True
+                if j < len(s2) and s2[j] == s3[i+j] and dp[i][j+1]:
+                    dp[i][j] = True
+        return dp[0][0]
