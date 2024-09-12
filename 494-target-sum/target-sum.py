@@ -4,12 +4,14 @@ class Solution:
         if target > totalSum:
             return 0
         
-        dp = [[0] * (totalSum*2 + 1) for _ in range(len(nums))]
-        dp[0][totalSum - nums[0]] += 1
-        dp[0][totalSum + nums[0]] += 1
+        dp = [0] * (totalSum*2 + 1)
+        dp[totalSum - nums[0]] += 1
+        dp[totalSum + nums[0]] += 1
         for i in range(1, len(nums)):
+            nextDP = [0] * (totalSum*2 + 1)
             for k in range(-totalSum, totalSum+1):
-                if dp[i-1][totalSum + k] > 0:
-                    dp[i][totalSum + k + nums[i]] += dp[i-1][totalSum + k]
-                    dp[i][totalSum + k - nums[i]] += dp[i-1][totalSum + k]
-        return dp[len(nums)-1][totalSum + target]
+                if dp[totalSum + k] > 0:
+                    nextDP[totalSum + k + nums[i]] += dp[totalSum + k]
+                    nextDP[totalSum + k - nums[i]] += dp[totalSum + k]
+            dp = nextDP
+        return dp[totalSum + target]
