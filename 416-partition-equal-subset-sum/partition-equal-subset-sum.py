@@ -17,16 +17,16 @@ class Solution:
             return memo[(i,curr)]
 
         # 1D DP
-        dp = [False] * (target+1)
-        dp[0] = True
-        for n in nums:
-            for j in range(target, n-1, -1):
-                dp[j] = dp[j] or dp[j - n]
+        # dp = [False] * (target+1)
+        # dp[0] = True
+        # for n in nums:
+        #     for j in range(target, n-1, -1):
+        #         dp[j] = dp[j] or dp[j - n]
 
-        return dp[target]
+        # return dp[target]
 
         # 2D DP
-        dp = [[False] * (len(target)+1) for _ in range(len(nums)+1)]
+        dp = [[False] * (target+1) for _ in range(len(nums)+1)]
         dp[0][0] = True
         for i in range(1, len(nums)+1):
             curr = nums[i-1]
