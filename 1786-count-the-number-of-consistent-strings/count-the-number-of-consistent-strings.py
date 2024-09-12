@@ -6,8 +6,6 @@ class Solution:
             consistent = True
             for c in word:
                 if c not in allowedChars:
-                    consistent = False
+                    count += 1
                     break
-            if consistent:
-                count += 1
-        return count
+        return len(words) - count
