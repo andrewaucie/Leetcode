@@ -19,5 +19,26 @@ class Solution:
             unmatched = memoization(indexSmall+1, indexLarge)
             memo[indexSmall][indexLarge] = max(matched, unmatched)
             return memo[indexSmall][indexLarge]
-        return memoization(0, 0)
+
+        # Optimized memoization
+        def memoizationOpt(indexSmall, indexLarge):
+            if indexSmall == len(text2) or indexLarge == len(text1):
+                return 0
+            if memo[indexSmall][indexLarge] > 0:
+                return memo[indexSmall][indexLarge]
+            if text1[indexLarge] == text2[indexSmall]:
+                memo[indexSmall][indexLarge] = memoizationOpt(indexSmall+1, indexLarge+1) + 1
+            else:
+                memo[indexSmall][indexLarge] = max(memoizationOpt(indexSmall+1, indexLarge), memoizationOpt(indexSmall, indexLarge+1))
+            return memo[indexSmall][indexLarge]
+        # DP Solution
+        dp = [[0] * (len(text1)+1) for _ in range(len(text2) + 1)]
+        for i in range(len(text2)-1, -1, -1):
+            for j in range(len(text1)-1, -1, -1):
+                if text2[i] == text1[j]:
+                    dp[i][j] = 1 + dp[i+1][j+1]
+                else:
+                    dp[i][j] = max(dp[i][j+1], dp[i+1][j])
+        return dp[0][0]
+        #return memoizationOpt(0, 0)
             
