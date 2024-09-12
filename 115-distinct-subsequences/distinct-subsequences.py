@@ -15,9 +15,10 @@ class Solution:
             exclude = memoization(i+1, targetIndex)
             memo[i][targetIndex] = include + exclude
             return memo[i][targetIndex]
-        return memoization(0,0)
+
         dp = [[0] * (len(t)+1) for _ in range(len(s)+1)]
-        dp[len(s)][len(t)] = 1
+        for i in range(len(s)+1):
+            dp[i][len(t)] = 1
         for i in range(len(s)-1, -1, -1):
             for j in range(len(t)-1, -1, -1):
                 if s[i] == t[j]:
