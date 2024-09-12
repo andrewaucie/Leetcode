@@ -4,8 +4,6 @@ class Solution:
         # Initialize row to 1, since initial row is only one possible path
         dp = [1] * n
         for i in range(1, m):
-            prev = 1
             for j in range(1, n):
-                dp[j] = dp[j] + prev
-                prev = dp[j]
+                dp[j] = dp[j] + dp[j-1]
         return dp[n-1]
