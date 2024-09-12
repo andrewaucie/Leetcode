@@ -1,11 +1,11 @@
 class Solution:
-    def uniquePaths(self, m: int, n: int) -> int:
-        dp = [[0] * n for _ in range(m)]
-        for j in range(n):
-            dp[0][j] = 1
-        for i in range(m):
-            dp[i][0] = 1
-        for i in range(1,m):
+    def uniquePaths(self, m: int, n: int) -> int:\
+        # Only need row above, and start from left endpoint (=1)
+        # Initialize row to 1, since initial row is only one possible path
+        dp = [1] * n
+        for i in range(1, m):
+            prev = 1
             for j in range(1, n):
-                dp[i][j] = dp[i-1][j] + dp[i][j-1]
-        return dp[m-1][n-1]
+                dp[j] = dp[j] + prev
+                prev = dp[j]
+        return dp[n-1]
