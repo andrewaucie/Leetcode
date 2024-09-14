@@ -4,7 +4,7 @@ class Solution:
         m = len(grid[0])
         d = {(0,1),(1,0),(0,-1),(-1,0)}
         queue = [(grid[0][0], (0,0))]
-        heapq.heapify(queue)
+        #heapq.heapify(queue)
         visited = set()
         while queue:
             currPeak, (i,j) = heapq.heappop(queue)
