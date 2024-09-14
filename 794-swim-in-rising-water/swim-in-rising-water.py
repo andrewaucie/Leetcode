@@ -1,17 +1,19 @@
 class Solution:
     def swimInWater(self, grid: List[List[int]]) -> int:
-        N = len(grid)
-        visit = set()
-        directions = [[0,1],[0,-1],[1,0],[-1,0]]
-        minH = [[grid[0][0],0,0]]
-        visit.add((0,0))
-        while minH:
-            t,r,c = heapq.heappop(minH)
-            if r == N-1 and c == N-1:
-                return t
-            for dr,dc in directions:
-                neiR , neiC = r+dr , c+dc
-                if (neiR < 0 or neiC < 0 or neiR >= N or neiC >= N or (neiR,neiC) in visit):
-                    continue
-                visit.add((neiR,neiC))
-                heapq.heappush(minH,[max(t,grid[neiR][neiC]), neiR, neiC])
+        n = len(grid)
+        m = len(grid[0])
+        
+        queue = [(grid[0][0], (0,0))]
+        heapq.heapify(queue)
+        visited = set()
+        peak = grid[0][0]
+        while queue:
+            currPeak, (i,j) = heapq.heappop(queue)
+            peak = max(peak, currPeak)
+            if (i,j) == (n-1, m-1):
+                return peak
+            for x,y in {(0,1),(1,0),(0,-1),(-1,0)}:
+                if (0 <= i+x < n and 0 <= j+y < m) and (i,j,x,y) not in visited:
+                    visited.add((i,j,x,y))
+                    heapq.heappush(queue, (max(grid[i+x][j+y], currPeak), (i+x,j+y)))
+        return peak
