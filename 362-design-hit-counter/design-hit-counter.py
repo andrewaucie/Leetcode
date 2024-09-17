@@ -1,27 +1,21 @@
 class HitCounter:
 
     def __init__(self):
-        self.timestamps = []
-        self.l = 0
-        from bisect import bisect_left
+        self.hits = []
 
     def hit(self, timestamp: int) -> None:
-        self.timestamps.append(timestamp)
-        self.l += 1
-        
-    def getHits(self, timestamp: int) -> int:
-        left = 0
-        right = self.l-1
-        target = timestamp - 300
-        while left <= right:
-            m = (left + right) // 2
-            if self.timestamps[m] <= target:
-                left = m + 1
-            else:
-                right = m - 1
+        self.hits.append(timestamp)
 
-        return self.l - left        
-        
+    def getHits(self, timestamp: int) -> int:
+        numHits = 0
+        for i in range(len(self.hits)-1, -1, -1):
+            if self.hits[i] > timestamp-300:
+                numHits += 1
+            else:
+                break
+        return numHits
+
+
 # Your HitCounter object will be instantiated and called as such:
 # obj = HitCounter()
 # obj.hit(timestamp)
