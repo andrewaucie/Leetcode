@@ -1,13 +1,8 @@
 class Solution:
     def uncommonFromSentences(self, s1: str, s2: str) -> List[str]:
-        words1 = Counter(s1.split(" "))
-        words2 = Counter(s2.split(" "))
-        res = []
-        for word, freq in words1.items():
-            if freq == 1 and word not in words2:
-                res.append(word)
-
-        for word, freq in words2.items():
-            if freq == 1 and word not in words1:
-                res.append(word)
-        return res
+        count = defaultdict(int)
+        for word in s1.split():
+            count[word] += 1
+        for word in s2.split():
+            count[word] += 1
+        return [word for word in count if count[word] == 1]
