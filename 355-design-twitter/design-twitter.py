@@ -17,20 +17,16 @@ class Twitter:
         # Add following user's posts
         for followeeId in self.following[userId]:
             for timestamp, tweetId in self.posts[followeeId]:
-                heapq.heappush(mostRecent, (timestamp, tweetId))
-                if len(mostRecent) > 10:
-                    heapq.heappop(mostRecent)
+                heapq.heappush(mostRecent, (-timestamp, tweetId))
         
         # Add own user's posts
         for timestamp, tweetId in self.posts[userId]:
-            heapq.heappush(mostRecent, (timestamp, tweetId))
-            if len(mostRecent) > 10:
-                heapq.heappop(mostRecent)
+            heapq.heappush(mostRecent, (-timestamp, tweetId))
         
         res = []
-        while mostRecent:
+        for _ in range(min(10, len(mostRecent))):
             res.append(heapq.heappop(mostRecent)[1])
-        return res[::-1]
+        return res
 
     def follow(self, followerId: int, followeeId: int) -> None:
         self.following[followerId].add(followeeId)
