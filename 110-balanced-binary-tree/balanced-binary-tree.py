@@ -7,15 +7,14 @@
 class Solution:
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
         
-        balance = True
         def balanced(node):
-            nonlocal balance
             if not node:
-                return 0
-            left = balanced(node.left)
-            right = balanced(node.right)
-            if abs(left - right) > 1:
-                balance = False
-            return max(left, right) + 1
-        balanced(root)
-        return balance
+                return [True, 0]
+            leftBalanced, leftDepth = balanced(node.left)
+            if not leftBalanced:
+                return [False, 0]
+            rightBalanced, rightDepth = balanced(node.right)
+            if not rightBalanced:
+                return [False, 0]
+            return [abs(leftDepth-rightDepth) <= 1, max(leftDepth, rightDepth) + 1]
+        return balanced(root)[0]
