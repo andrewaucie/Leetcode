@@ -1,7 +1,11 @@
 class Solution:
     def diffWaysToCompute(self, expression: str) -> List[int]:
+        memo = {}
         
         def helper(expr):
+            if expr in memo:
+                return memo[expr]
+            
             result = []
             for i, char in enumerate(expr):
                 if char in "+-*":
@@ -20,6 +24,7 @@ class Solution:
             if not result:
                 result.append(int(expr))
             
+            memo[expr] = result
             return result
         
         return helper(expression)
