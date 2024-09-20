@@ -9,9 +9,9 @@ class Solution:
         visited = set()
         k = 1
         for i in range(firstPositive, len(nums)):
-            if nums[i] not in visited and nums[i] != k:
-                return k
             if nums[i] not in visited:
+                if nums[i] != k:
+                    return k
                 visited.add(nums[i])
                 k += 1
         return k
