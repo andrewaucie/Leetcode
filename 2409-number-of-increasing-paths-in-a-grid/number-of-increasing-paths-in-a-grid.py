@@ -1,18 +1,21 @@
 class Solution:
     def countPaths(self, grid: List[List[int]]) -> int:
-        
-        memo = {}
-        def backtrack(i,j):
-            if (i,j) in memo:
-                return memo[(i,j)]
-            res = 1
-            for dx, dy in {(0,1),(1,0),(0,-1),(-1,0)}:
-                if 0 <= i+dx < len(grid) and 0 <= j+dy < len(grid[0]) and grid[i+dx][j+dy] > grid[i][j]:
-                   res += backtrack(i+dx, j+dy)% (10**9 + 7)
-            memo[(i,j)] = res
-            return res
+        MOD = 10 ** 9 + 7
+        m, n = len(grid), len(grid[0])
+        dirxns = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        memo = [[-1] * n for _ in range(m)]
         res = 0
-        for i in range(len(grid)):
-            for j in range(len(grid[0])):
-                res += backtrack(i,j)
-        return res % (10**9 + 7)
+        def dfs(row, col):
+            if memo[row][col] != -1:
+                return memo[row][col]
+            count = 1
+            for dx, dy in dirxns:
+                new_row, new_col = row + dx, col + dy
+                if 0 <= new_row < m and 0 <= new_col < n and grid[new_row][new_col] > grid[row][col]:
+                    count += dfs(new_row, new_col)
+            memo[row][col] = count
+            return count
+        for row in range(m):
+            for col in range(n):
+                res += dfs(row, col)
+        return res % MOD
