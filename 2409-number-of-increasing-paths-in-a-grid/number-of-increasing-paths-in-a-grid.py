@@ -7,7 +7,7 @@ class Solution:
                 return memo[(i,j)]
             res = 1
             for dx, dy in {(0,1),(1,0),(0,-1),(-1,0)}:
-                if 0 <= i+dx < len(grid) and 0 <= j+dy < len(grid[0]) and grid[i+dx][j+dy] > grid[i][j]:
+                if 0 <= i+dx < len(grid) and 0 <= j+dy < len(grid[0]) and grid[i+dx][j+dy]< grid[i][j]:
                    res += backtrack(i+dx, j+dy)
             memo[(i,j)] = res
             return res
