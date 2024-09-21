@@ -7,23 +7,22 @@
 
 class Solution:
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
-        LCA = None
-        maxDepth = 0
-        def traverse(node, depth):
-            nonlocal maxDepth, LCA
-            if self.hasNode(node, p) and self.hasNode(node, q):
-                if depth >= maxDepth:
-                    maxDepth = depth
-                    LCA = node
-                traverse(node.left, depth+1)
-                traverse(node.right, depth+1)
-        traverse(root, 0)
-        return LCA
+        pathP = self.createPath(root, p, [root])
+        pathQ = self.createPath(root, q, [root])
+        i = 0
+        while i < len(pathP)-1 and i < len(pathQ)-1 and pathP[i+1] == pathQ[i+1]:
+            i += 1
+        return pathP[i]
             
-    def hasNode(self, node, target):
+    def createPath(self, node, target, path):
         if not node:
-            return False
+            return [None]
         if node.val == target.val:
-            return True
-        return self.hasNode(node.left, target) or self.hasNode(node.right, target)
-        
+            return path + [target]
+        left = self.createPath(node.left, target, path + [node.left])
+        right = self.createPath(node.right, target, path + [node.right])
+        if left[-1] == target:
+            return left
+        elif right[-1] == target:
+            return right
+        return [None]
