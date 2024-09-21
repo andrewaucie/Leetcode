@@ -1,15 +1,13 @@
 class Solution:
     def lexicalOrder(self, n: int) -> List[int]:
-        numberGraph = defaultdict(list)
-        for i in range(n, 0, -1):
-            numberGraph[i // 10].append(i)
-        
+        num = 1
         res = []
-        def dfs(i):
-            res.append(i)
-
-            for nextN in reversed(numberGraph[i]):
-                dfs(nextN)
-            return
-        dfs(0)
-        return res[1:]
+        for _ in range(n):
+            res.append(num)
+            if num * 10 <= n:
+                num *= 10
+            else:
+                while num % 10 == 9 or num >= n:
+                    num //= 10
+                num += 1
+        return res
