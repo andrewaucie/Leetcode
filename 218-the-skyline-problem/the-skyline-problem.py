@@ -6,7 +6,6 @@ class Solution:
             edges.append([build[1], i])
 
         edges.sort()
-        print(edges)
         live, answer = [], []
         idx = 0
         
