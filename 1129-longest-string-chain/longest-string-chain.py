@@ -1,33 +1,21 @@
 class Solution:
     def longestStrChain(self, words: List[str]) -> int:
-        def checkPred(i,j):
-            prev, curr = 0, 0
-            while prev < len(words[j]) and curr < len(words[i]) and words[j][prev] == words[i][curr]:
-                prev += 1
-                curr += 1
-            curr += 1
-            while prev < len(words[j]) and curr < len(words[i]) and words[j][prev] == words[i][curr]:
-                prev += 1
-                curr += 1
-            return curr == len(words[i]) and prev == len(words[j])
+        word_set = set(words)
+        memo = {}
 
-        memo = [[-1] * (len(words)) for _ in range(len(words))]
-
-        def memoization(i, j):
-            if i == len(words):
+        def dfs(word):
+            if word not in word_set:
                 return 0
-            if memo[i][j] != -1:
-                return memo[i][j]
-            # Include
-            include = 0
-            if i != j and checkPred(i,j):
-                include = memoization(i+1, i) + 1
-            # Exclude
-            exclude = memoization(i+1, j)
-            memo[i][j] = max(include, exclude)
-            return memo[i][j]
-        words.sort(key=lambda x:len(x))
-        maxLen = 0
-        for i in range(len(words)):
-            maxLen = max(maxLen, memoization(i, i)+1)
-        return maxLen
+
+            if word in memo:
+                return memo[word]
+
+            max_chain = 1
+            for i in range(len(word)):
+                next_word = word[:i] + word[i+1:]
+                max_chain = max(max_chain, 1 + dfs(next_word))
+
+            memo[word] = max_chain
+            return max_chain
+
+        return max(dfs(word) for word in words)
