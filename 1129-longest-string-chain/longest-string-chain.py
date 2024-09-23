@@ -1,16 +1,5 @@
 class Solution:
     def longestStrChain(self, words: List[str]) -> int:
-        def checkPred(i,j):
-            prev, curr = 0, 0
-            while prev < len(words[j]) and curr < len(words[i]) and words[j][prev] == words[i][curr]:
-                prev += 1
-                curr += 1
-            curr += 1
-            while prev < len(words[j]) and curr < len(words[i]) and words[j][prev] == words[i][curr]:
-                prev += 1
-                curr += 1
-            return curr == len(words[i]) and prev == len(words[j])
-
         words.sort(key=len)
     
         dp = {}
