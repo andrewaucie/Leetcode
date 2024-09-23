@@ -1,16 +1,33 @@
 class Solution:
-    def findNumberOfLIS(self, nums: List[int]) -> int:
-        dp = [[1,1] for _ in range(len(nums))]
-        for i in range(len(nums)):
+    def findNumberOfLIS(self, nums):
+        n = len(nums)
+        length = [0] * n
+        count = [0] * n
+
+        def calculate_dp(i):
+            if length[i] != 0:
+                return
+
+            length[i] = 1
+            count[i] = 1
+
             for j in range(i):
-                if nums[i] > nums[j]:
-                    if dp[j][0] + 1 > dp[i][0]:
-                        dp[i] = list([dp[j][0] + 1, dp[j][1]])
-                    elif dp[j][0] + 1 == dp[i][0]:
-                        dp[i][1] += dp[j][1]
-        longest = max(dp, key=lambda x:x[0])[0]
-        count = 0
-        for length, num in dp:
-            if longest == length:
-                count += num
-        return count
+                if nums[j] < nums[i]:
+                    calculate_dp(j)
+                    if length[j] + 1 > length[i]:
+                        length[i] = length[j] + 1
+                        count[i] = 0
+                    if length[j] + 1 == length[i]:
+                        count[i] += count[j]
+
+        max_length = 0
+        result = 0
+        for i in range(n):
+            calculate_dp(i)
+            max_length = max(max_length, length[i])
+
+        for i in range(n):
+            if length[i] == max_length:
+                result += count[i]
+
+        return result
