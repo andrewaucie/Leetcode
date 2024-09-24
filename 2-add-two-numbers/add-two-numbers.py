@@ -8,7 +8,7 @@ class Solution:
         carry = 0
         dummy = ListNode()
         temp = dummy
-        while l1 or l2:
+        while l1 or l2 or carry != 0:
             digit = carry
             if l1:
                 digit += l1.val
@@ -19,7 +19,5 @@ class Solution:
             temp.next = ListNode(val=(digit % 10))
             temp = temp.next
             carry = digit // 10
-        if carry != 0:
-            temp.next = ListNode(val=carry)
         return dummy.next
 
