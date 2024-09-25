@@ -1,8 +1,8 @@
 class UnionFind:
     def __init__(self, n):
-        self.parents = [-1] * n  # -1 represents water
-        self.rank = [0] * n
-        self.count = 0  # Number of islands
+        self.parents = [i for i in range(n)]
+        self.rank = [1] * n
+        self.islands = 0
     
     def find(self, x):
         if self.parents[x] != x:
@@ -20,36 +20,29 @@ class UnionFind:
             else:
                 self.parents[rootY] = rootX
                 self.rank[rootX] += 1
-            self.count -= 1  # Merged two islands, so reduce count
+            self.islands -= 1
+
+    def addIsland(self):
+        self.islands += 1
     
-    def add(self, x):
-        if self.parents[x] == -1:  # If it's water, add a new island
-            self.parents[x] = x
-            self.count += 1
+    def getIslands(self):
+        return self.islands
 
 class Solution:
     def numIslands2(self, m: int, n: int, positions: List[List[int]]) -> List[int]:
-        uf = UnionFind(m * n)
-        result = []
-        directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
-        visited = set()
-
-        for x, y in positions:
-            pos = x * n + y  # Map (x, y) to a 1D index
-            
-            if (x, y) in visited:
-                result.append(uf.count)
+        uf = UnionFind(len(positions))
+        direction = {(1,0),(0,1),(-1,0),(0,-1)}
+        visited = {}
+        islands = []
+        for i, (x, y) in enumerate(positions):
+            if (x,y) in visited:
+                islands.append(uf.getIslands())
                 continue
-            
-            visited.add((x, y))
-            uf.add(pos)  # Add new island
-            
-            # Union with neighbors
-            for dx, dy in directions:
-                nx, ny = x + dx, y + dy
-                if 0 <= nx < m and 0 <= ny < n and (nx, ny) in visited:
-                    uf.union(pos, nx * n + ny)
-            
-            result.append(uf.count)
+            uf.addIsland()
+            for dx,dy in direction:
+                if (x+dx, y+dy) in visited:
+                    uf.union(i, visited[(x+dx, y+dy)])
+            visited[(x,y)] = i
+            islands.append(uf.getIslands())
+        return islands
         
-        return result
