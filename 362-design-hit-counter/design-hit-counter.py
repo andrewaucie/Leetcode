@@ -1,22 +1,17 @@
 class HitCounter:
 
     def __init__(self):
-        self.hits = []
+        self.hitCount = defaultdict(int)
 
     def hit(self, timestamp: int) -> None:
-        if self.hits and self.hits[-1][0] == timestamp:
-            self.hits[-1][1] += 1
-        else:
-            self.hits.append([timestamp, 1])
+        self.hitCount[timestamp] += 1
 
     def getHits(self, timestamp: int) -> int:
-        numHits = 0
-        for i in range(len(self.hits)-1, -1, -1):
-            if self.hits[i][0] > timestamp-300:
-                numHits += self.hits[i][1]
-            else:
-                break
-        return numHits
+        hits = 0
+        for time in self.hitCount:
+            if time > timestamp - 300:
+                hits += self.hitCount[time]
+        return hits
 
 
 # Your HitCounter object will be instantiated and called as such:
