@@ -1,22 +1,29 @@
 class Solution:
-    def findDuplicate(self, paths: List[str]) -> List[List[str]]:
-        dic = {}
-        duplicateFiles=[]
-        for filePath in paths:
-            fileNames = filePath.split() #Split the path to filenames
+    def findDuplicate(self, paths):
+        from collections import defaultdict
 
-            directoryPath = fileNames[0] #To take only the directory from the given filePath
+        # Dictionary to hold file content as key and list of file paths as value
+        content_map = defaultdict(list)
 
-            for file in fileNames[1:]: #traverse through each file
+        # Iterate over each path string
+        for path in paths:
+            # Split path into directory and files
+            parts = path.split(' ')
+            directory = parts[0]  # The root directory
+            files = parts[1:]     # The files in the directory
 
-                fileName,fileContent = file[:file.index('(')],file[file.index('('):-1]#To get fileName and fileContent
+            # Process each file
+            for file in files:
+                # Split file name and content
+                filename, content = file.split('(')
+                content = content[:-1]  # Remove the closing parenthesis
 
-                if fileContent not in dic:# if the content not in dic make an empty list for that particular key
-                    dic[fileContent] = []
+                # Construct the full file path
+                full_path = f"{directory}/{filename}"
+                # Map content to file path
+                content_map[content].append(full_path)
 
-                dic[fileContent].append(directoryPath+'/'+fileName)#Just append the value of the key in the dictionary every key has a list of fileNames
-                
-        for value in dic.values():
-            if len(value)>1: #Append only if the len the values in the Dictionary is > 1
-                duplicateFiles.append(value)
-        return duplicateFiles[::-1] #To generate the output as it is in the expected I have used [::-1]
+        # Filter and collect paths with duplicate contents
+        duplicates = [paths for paths in content_map.values() if len(paths) > 1]
+
+        return duplicates
