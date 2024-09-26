@@ -1,10 +1,18 @@
 class MyCalendar:
-    def __init__(self):
-        self.calendar = []
 
+    def __init__(self):
+        self.L = []
+        self.m = {}
+        
     def book(self, start: int, end: int) -> bool:
-        for x in self.calendar:
-            if (start < x[0] and end > x[0]) or (start == x[0]) or (start > x[0] and start < x[1]):
-                return False
-        self.calendar.append([start, end])
-        return True
+        idx = bisect.bisect_right(self.L, start)
+        if idx == len(self.L) or self.m[self.L[idx]] >= end:
+            bisect.insort(self.L, end)
+            self.m[end] = start
+            return True
+
+        return False
+
+# Your MyCalendar object will be instantiated and called as such:
+# obj = MyCalendar()
+# param_1 = obj.book(start,end)
