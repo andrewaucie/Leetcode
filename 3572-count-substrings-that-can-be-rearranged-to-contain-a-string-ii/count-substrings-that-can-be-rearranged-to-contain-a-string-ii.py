@@ -1,20 +1,20 @@
 class Solution:
     def validSubstringCount(self, word1: str, word2: str) -> int:
         targetFreq = Counter(word2)
+        currFreq = defaultdict(int)
         total = 0
-        i = 0
-        count = len(word2)
-        for c in word1:
-            if targetFreq[c] > 0:
-                count -= 1
-            targetFreq[c] -= 1
-            while count == 0:
-                if targetFreq[word1[i]] == 0:
-                    count += 1
-                targetFreq[word1[i]] += 1
-                i += 1
-            total += i
+        left = 0
+        have, need = 0, len(targetFreq)
+        for right in range(len(word1)):
+            currFreq[word1[right]] += 1
+            if targetFreq[word1[right]] == currFreq[word1[right]]:
+                have += 1
+                while have == need:
+                    total += len(word1) - right
+                    currFreq[word1[left]] -= 1
+                    if targetFreq[word1[left]] > currFreq[word1[left]]:
+                        have -= 1
+                    left += 1
         return total
-        # [b,c,c,a]
-        # [a,b,c]
-        # 
+        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
