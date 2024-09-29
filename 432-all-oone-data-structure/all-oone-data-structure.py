@@ -28,14 +28,6 @@ class AllOne:
         self.keyDict = {}
         self.freqDict = {0: self.head}
 
-    def print(self):
-        temp = self.head
-        while temp:
-            print(temp == temp.next)
-            print(temp.freq, temp.keys)
-            temp = temp.next
-        print("-")
-
     def deleteKeyNode(self, key, freqNode):
         freqNode.keys.remove(key)
         if len(freqNode.keys) == 0:
