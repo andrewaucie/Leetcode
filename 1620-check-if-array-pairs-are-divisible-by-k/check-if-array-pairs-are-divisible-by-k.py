@@ -1,12 +1,9 @@
 class Solution:
     def canArrange(self, arr: List[int], k: int) -> bool:
-        remainderList = []
-        remainders = defaultdict(int)
-        for n in arr:
-            remainderList.append(n%k)
-            remainders[n%k] += 1
+        remainderList = [n%k for n in arr]
+        remainders = Counter(remainderList)
         for r in remainderList:
-            if k - r in remainders or (r == 0 and r in remainders and remainders[r] >= 2):
+            if k - r in remainders or (r == 0 and remainders[r] >= 2):
                 remainders[r] -= 1 + int(r == 0)
                 if remainders[k-r] > 0:
                     remainders[k-r] -= 1
