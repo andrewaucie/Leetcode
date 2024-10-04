@@ -14,16 +14,13 @@ class FileSystem:
         return directory
 
     def ls(self, path: str) -> List[str]:
-        #print(self.path)
         directory = self.path
         for item in path.split("/"):
-            #print(item)
             if item == '':
                 continue
             if item not in directory:
                 return [item]
             directory = directory[item]
-        #print(path, directory)
         items = []
         for d in directory:
             if d != 0:
