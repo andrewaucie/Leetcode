@@ -8,12 +8,9 @@ class Solution:
         targetSum = minSkill + maxSkill
         chemistry = 0
         for s in skill:
-            if freq[s] == 0:
-                continue
             if freq[targetSum - s] == 0:
                 return -1
             freq[targetSum - s] -= 1
-            freq[s] -= 1
             chemistry += s * (targetSum - s)
-        return chemistry
+        return chemistry // 2
             
