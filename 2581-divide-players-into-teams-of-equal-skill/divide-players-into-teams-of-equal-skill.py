@@ -1,16 +1,29 @@
 class Solution:
     def dividePlayers(self, skill: List[int]) -> int:
-        minSkill, maxSkill, freq = float('inf'), 0, defaultdict(int)
-        for s in skill:
-            minSkill = min(minSkill, s)
-            maxSkill = max(maxSkill, s)
-            freq[s] += 1
-        targetSum = minSkill + maxSkill
-        chemistry = 0
-        for s in skill:
-            if freq[targetSum - s] == 0:
+        n = len(skill)
+        total_skill = sum(skill)
+
+        # Check if total skill can be evenly distributed
+        if total_skill % (n // 2) != 0:
+            return -1
+
+        target_skill = total_skill // (n // 2)
+        skill_map = Counter(skill)
+        total_chemistry = 0
+
+        # Iterate through unique skill values
+        for curr_skill, curr_freq in skill_map.items():
+            partner_skill = target_skill - curr_skill
+
+            # Check if valid partner skill exists with matching frequency
+            if (
+                partner_skill not in skill_map
+                or curr_freq != skill_map[partner_skill]
+            ):
                 return -1
-            freq[targetSum - s] -= 1
-            chemistry += s * (targetSum - s)
-        return chemistry // 2
-            
+
+            # Calculate chemistry for all pairs with this skill
+            total_chemistry += curr_skill * partner_skill * curr_freq
+
+        # Return half of total chemistry (as each pair is counted twice)
+        return total_chemistry // 2
