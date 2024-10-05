@@ -1,21 +1,27 @@
 class Solution:
     def minOperations(self, nums: List[int], x: int, y: int) -> int:
-        left, right = 0, max(nums) // min(x, y) + 1
-        while left < right:
-            mid = (left + right) // 2
-            if self.can_reduce_to_zero(nums, x, y, mid):
+        left = 0
+        right = max(nums) // y + 1
+        minSteps = right
+        while left < right - 1:
+            mid = (right + left) // 2
+            if self.canComplete(nums, mid, x, y):
+                minSteps = mid
                 right = mid
             else:
-                left = mid + 1
-        return left
+                left = mid
+        return minSteps
 
-    def can_reduce_to_zero(self, arr, x, y, k):
-        required_ops = 0
-        for element in arr:
-            if element <= k * y:
-                continue
-            extra_ops = (element - k * y + x - y - 1) // (x - y)
-            required_ops += extra_ops
-            if required_ops > k:
-                return False
+    def canComplete(self, nums, steps, x, y):
+        diff = x - y
+        x_steps = steps
+        for i in nums:
+            if i > steps * y:
+                remain = i - steps * y
+                if remain % diff == 0:
+                    x_steps -= remain // diff
+                else:
+                    x_steps -= remain // diff + 1
+                if x_steps < 0:
+                    return False
         return True
