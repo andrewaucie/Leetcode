@@ -18,10 +18,9 @@ class Solution:
         for i in nums:
             if i > steps * y:
                 remain = i - steps * y
-                if remain % diff == 0:
-                    x_steps -= remain // diff
-                else:
-                    x_steps -= remain // diff + 1
+                x_steps -= remain // diff
+                if remain % diff != 0:
+                    x_steps -= 1
                 if x_steps < 0:
                     return False
         return True
