@@ -1,26 +1,31 @@
 class Solution:
     def shortestPalindrome(self, s: str) -> str:
-        length = len(s)
-        if length == 0:
-            return s
+        # Reverse the original string
+        reversed_string = s[::-1]
 
-        # Find the longest palindromic prefix
-        left = 0
-        for right in range(length - 1, -1, -1):
-            if s[right] == s[left]:
-                left += 1
+        # Combine the original and reversed strings with a separator
+        combined_string = s + "#" + reversed_string
 
-        # If the whole string is a palindrome, return the original string
-        if left == length:
-            return s
+        # Build the prefix table for the combined string
+        prefix_table = self._build_prefix_table(combined_string)
 
-        # Extract the suffix that is not part of the palindromic prefix
-        non_palindrome_suffix = s[left:]
-        reverse_suffix = non_palindrome_suffix[::-1]
+        # Get the length of the longest palindromic prefix
+        palindrome_length = prefix_table[-1]
 
-        # Form the shortest palindrome by prepending the reversed suffix
-        return (
-            reverse_suffix
-            + self.shortestPalindrome(s[:left])
-            + non_palindrome_suffix
-        )
+        # Construct the shortest palindrome by appending the reverse of the suffix
+        suffix = reversed_string[: len(s) - palindrome_length]
+        return suffix + s
+
+    # Helper function to build the KMP prefix table
+    def _build_prefix_table(self, s: str) -> list:
+        prefix_table = [0] * len(s)
+        length = 0
+
+        # Build the table by comparing characters
+        for i in range(1, len(s)):
+            while length > 0 and s[i] != s[length]:
+                length = prefix_table[length - 1]
+            if s[i] == s[length]:
+                length += 1
+            prefix_table[i] = length
+        return prefix_table
