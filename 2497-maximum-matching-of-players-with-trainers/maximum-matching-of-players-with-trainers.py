@@ -1,10 +1,15 @@
 class Solution:
-    def matchPlayersAndTrainers(self, players: List[int], trainers: List[int]) -> int:
-        players.sort()
+    def matchPlayersAndTrainers(self, players:  List[int], 
+                                      trainers: List[int]) -> int:
+        ans = 0
         trainers.sort()
-        p, t = 0, 0
-        while p < len(players) and t < len(trainers):
-            if players[p] <= trainers[t]:
-                p += 1
-            t += 1
-        return p
+        heapify(players)
+
+        for t in trainers:
+
+            if players and players[0] <= t:
+                heappop(players)
+
+                ans+= 1
+
+        return ans
