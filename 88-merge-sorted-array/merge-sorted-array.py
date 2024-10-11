@@ -7,6 +7,8 @@ class Solution:
         m -= 1
         index = len(nums1) - 1
         while index >= 0:
+            if n < 0:
+                break
             if m < 0 or (n >= 0 and nums2[n] > nums1[m]):
                 nums1[index] = nums2[n]
                 n -= 1
