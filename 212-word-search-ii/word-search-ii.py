@@ -12,19 +12,22 @@ class Solution:
             curr['*'] = word
         
         res = []
-        def backtracking(i, j, curr):
+        def backtracking(i, j, parent):
             letter = board[i][j]
+            curr = parent[letter]
             if '*' in curr:
                 res.append(curr.pop('*'))
             board[i][j] = '#'
             for dx, dy in {(1,0), (0,1), (-1,0), (0,-1)}:
                 if 0 <= i+dx < n and 0 <= j+dy < m:
                     if board[i+dx][j+dy] in curr:
-                        backtracking(i+dx, j+dy, curr[board[i+dx][j+dy]])
+                        backtracking(i+dx, j+dy, curr)
             board[i][j] = letter
+            if not curr:
+                parent.pop(letter)
 
         for i in range(n):
             for j in range(m):
                 if board[i][j] in trie:
-                    backtracking(i, j, trie[board[i][j]])
+                    backtracking(i, j, trie)
         return res
