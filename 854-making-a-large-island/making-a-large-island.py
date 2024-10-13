@@ -1,32 +1,55 @@
+class UnionFind:
+    def __init__(self, n, m):
+        # map (i,j) to linear line
+        # (i,j) = n*i + m*j
+        # n * m
+        # id = (i * m + j)
+        self.parents = [m*i + j for i in range(n) for j in range(m)]
+        self.islandSize = [1] * (n) * (m)
+    
+    # find parent of x's connected component
+    def find(self, x):
+        if x != self.parents[x]:
+            self.parents[x] = self.find(self.parents[x])
+        return self.parents[x]
+
+    # Union
+    def union(self, x, y):
+        rootX = self.find(x)
+        rootY = self.find(y)
+        if rootX != rootY:
+            self.parents[rootY] = rootX
+            self.islandSize[rootX] += self.islandSize[rootY]
+
 class Solution(object):
     def largestIsland(self, grid):
-        N = len(grid)
+        n, m = len(grid), len(grid[0])
+        islandUF = UnionFind(n, m)
 
-        def neighbors(r, c):
-            for nr, nc in ((r-1, c), (r+1, c), (r, c-1), (r, c+1)):
-                if 0 <= nr < N and 0 <= nc < N:
-                    yield nr, nc
+        for i in range(n):
+            for j in range(m):
+                if grid[i][j] == 1:
+                    # Check the neighbors and union the land cells
+                    for dx, dy in {(-1, 0), (0, -1)}:  # Only check left and top to avoid double union
+                        ni, nj = i + dx, j + dy
+                        if 0 <= ni < n and 0 <= nj < m and grid[ni][nj] == 1:
+                            islandUF.union(i * m + j, ni * m + nj)
 
-        def dfs(r, c, index):
-            ans = 1
-            grid[r][c] = index
-            for nr, nc in neighbors(r, c):
-                if grid[nr][nc] == 1:
-                    ans += dfs(nr, nc, index)
-            return ans
+        islandMax = max(islandUF.islandSize)
 
-        area = {}
-        index = 2
-        for r in range(N):
-            for c in range(N):
-                if grid[r][c] == 1:
-                    area[index] = dfs(r, c, index)
-                    index += 1
-
-        ans = max(area.values() or [0])
-        for r in range(N):
-            for c in range(N):
-                if grid[r][c] == 0:
-                    seen = {grid[nr][nc] for nr, nc in neighbors(r, c) if grid[nr][nc] > 1}
-                    ans = max(ans, 1 + sum(area[i] for i in seen))
-        return ans
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j] == 0:
+                    currIslandSize = 1
+                    neighboringRoots = set()  # Track unique neighboring island roots
+                    
+                    for dx, dy in {(1, 0), (0, 1), (-1, 0), (0, -1)}:
+                        ni, nj = i + dx, j + dy
+                        if 0 <= ni < n and 0 <= nj < m and grid[ni][nj] == 1:
+                            parentIsland = islandUF.find(ni * m + nj)
+                            if parentIsland not in neighboringRoots:
+                                neighboringRoots.add(parentIsland)
+                                currIslandSize += islandUF.islandSize[parentIsland]
+                    
+                    islandMax = max(islandMax, currIslandSize)
+        return islandMax
