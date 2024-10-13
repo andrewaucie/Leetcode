@@ -1,5 +1,3 @@
-from sortedcontainers import SortedList
-
 class Solution:
     def smallestRange(self, nums: List[List[int]]) -> List[int]:
         events = []
@@ -7,18 +5,18 @@ class Solution:
             for n in nums[i]:
                 events.append((n, i))
         events.sort()
-        ranges = SortedList()
-        rangeDict = {}
-        start = float('-inf')
+        ranges = defaultdict(int)
         minRange = [float('-inf'), float('inf')]
-        for n, rangeNum in events:
-            if rangeNum in rangeDict:
-                ranges.remove(rangeDict[rangeNum])
-            ranges.add(n)
-            rangeDict[rangeNum] = n
-            if len(ranges) > 1:
-                start = ranges[0]
-            if len(ranges) == len(nums):
-                if n - start < minRange[1] - minRange[0]:
-                    minRange = [start, n]
-        return minRange if minRange != [float('-inf'), float('inf')] else [nums[0][0], nums[0][0]]
+        l = 0
+        for r, (n, rangeIndex) in enumerate(events):
+            ranges[rangeIndex] += 1
+
+            while len(ranges) == len(nums):
+                if n - events[l][0] < minRange[1] - minRange[0]:
+                    minRange = [events[l][0], n]
+
+                ranges[events[l][1]] -= 1
+                if ranges[events[l][1]] == 0:
+                    del ranges[events[l][1]]
+                l += 1
+        return minRange
