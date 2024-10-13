@@ -7,7 +7,7 @@
 class Solution:
     def kthLargestPerfectSubtree(self, root: Optional[TreeNode], k: int) -> int:
         
-        heap = []
+        res = []
         def perfectTree(root):
             if not root:
                 return 0
@@ -16,10 +16,11 @@ class Solution:
             if left == -1 or right == -1 or left != right:
                 return -1
 
-            heapq.heappush(heap, left + right + 1)
-            if len(heap) > k:
-                heapq.heappop(heap)
+            res.append(left + right + 1)
 
             return left + right + 1
         perfectTree(root)
-        return heap[0] if len(heap) == k else -1
+        res.sort(reverse=True)
+        if len(res) >= k:
+            return res[k-1]
+        return -1
