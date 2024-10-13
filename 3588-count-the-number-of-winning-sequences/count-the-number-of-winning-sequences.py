@@ -10,9 +10,7 @@ class Solution:
         def backtrack(i, points, prev):
             if i == n:
                 return int(points > 0)
-            if points > 0 and points - (n - i + 1) > 0:
-                return 2**(n - i)
-            elif points < 0 and points + (n - i + 1) < 0:
+            if points + (n - i + 1) < 0:
                 return 0
             if (i, points, prev) in memo:
                 return memo[(i, points, prev)]
