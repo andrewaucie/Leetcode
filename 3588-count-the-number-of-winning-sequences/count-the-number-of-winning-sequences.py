@@ -1,27 +1,34 @@
 class Solution:
     def countWinningSequences(self, s: str) -> int:
-        combat = {
-            'E': 'F',
-            'W': 'E',
-            'F': 'W'
-        }
-        n = len(s)
-        memo = {}
-        def backtrack(i, points, prev):
-            if i == n:
-                return int(points > 0)
-            if points + (n - i + 1) < 0:
+        n=len(s)
+        MOD=10**9+7
+        def get(alice,bob):
+            if alice=='F' and bob=='E':
+                return -1
+            if alice=='F' and bob=='W':
+                return 1
+            if alice=='W' and bob=='F':
+                return -1
+            if alice=='W' and bob=='E':
+                return 1
+            if alice=='E' and bob=='F':
+                return 1
+            if alice=='E' and bob=='W':
+                return -1
+            return 0
+        dp={}
+        def func(prev,i,score):
+            if(score+(n-i)<=0):
                 return 0
-            if (i, points, prev) in memo:
-                return memo[(i, points, prev)]
-            ways = 0
-            for dragon in {'E', 'W', 'F'} - {prev}:
-                curr = points
-                if combat[s[i]] == dragon:
-                    curr += 1
-                elif combat[dragon] == s[i]:
-                    curr -= 1
-                ways += backtrack(i+1, curr, dragon)
-            memo[(i, points, prev)] = ways % (10**9 + 7)
-            return memo[(i, points, prev)]
-        return backtrack(0, 0, '')
+            if(i==n):
+                return 1
+            if((prev,i,score) in dp):
+                return dp[(prev,i,score)]
+            points=0
+            for x in "EFW":
+                if(x!=prev):
+                    d=get(s[i],x)
+                    points+=func(x,i+1,score+d)
+            dp[(prev,i,score)]=points % MOD
+            return dp[(prev,i,score)]
+        return func('',0,0) % MOD
