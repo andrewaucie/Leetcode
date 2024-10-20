@@ -11,6 +11,7 @@ class Solution:
                 dp[i] += dp[i - oneGroup]
             if zeroGroup <= i:
                 dp[i] += dp[i - zeroGroup]
+            dp[i] %= 10**9 + 7
             if i >= minLength:
                 res += dp[i]
         return res % (10**9 + 7)
