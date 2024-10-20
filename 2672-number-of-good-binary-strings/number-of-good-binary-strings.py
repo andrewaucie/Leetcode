@@ -4,11 +4,12 @@ class Solution:
 
         dp = [0] * (maxLength + 1)
         dp[0] = 1
-
+        res = 0
         for i in range(1, maxLength + 1):
             if oneGroup <= i:
                 dp[i] += dp[i - oneGroup]
             if zeroGroup <= i:
                 dp[i] += dp[i - zeroGroup]
-        
-        return sum(dp[minLength:]) % mod
+            if i >= minLength:
+                res += dp[i]
+        return res % mod
