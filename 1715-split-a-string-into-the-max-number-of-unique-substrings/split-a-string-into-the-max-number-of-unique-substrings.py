@@ -1,15 +1,15 @@
 class Solution:
     def maxUniqueSplit(self, s: str) -> int:
         seen = set()
-        def backtrack(i):
+        def backtrack(i, string):
             if i == len(s):
                 return 0
-            unique = 0
-            for end in range(i+1, len(s)+1):
-                sub = s[i:end]
-                if sub not in seen:
-                    seen.add(sub)
-                    unique = max(unique, backtrack(end) + 1)
-                    seen.remove(sub)
-            return unique
-        return backtrack(0)
+            string += s[i]
+            reset = 0
+            if string not in seen:
+                seen.add(string)
+                reset = backtrack(i+1, "") + 1
+                seen.remove(string)
+            add = backtrack(i+1, string)
+            return max(reset, add)
+        return backtrack(0, "")
