@@ -1,1 +1,1 @@
-<h2>sudoku-solver Notes</h2><hr>[ Time taken: 22 m 38 s ]
+<h2>sudoku-solver Notes</h2><hr>[ Time taken: 25 m 52 s ]
