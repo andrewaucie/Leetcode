@@ -5,31 +5,15 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    def kthLargestLevelSum(self, root, k):
-        # min heap of size k
-        # at the end, top element is kth largest
-        pq = []
-        bfs_queue = deque()
-        bfs_queue.append(root)
-
-        while bfs_queue:
-            # level order traversal
-            size = len(bfs_queue)
-            sum_val = 0
-            for _ in range(size):
-                popped_node = bfs_queue.popleft()
-                sum_val += popped_node.val
-                if popped_node.left is not None:
-                    # add left child
-                    bfs_queue.append(popped_node.left)
-                if popped_node.right is not None:
-                    # add right child
-                    bfs_queue.append(popped_node.right)
-
-            heapq.heappush(pq, sum_val)
-            if len(pq) > k:
-                # evict top element
-                heapq.heappop(pq)
-        if len(pq) < k:
+    def kthLargestLevelSum(self, root: Optional[TreeNode], k: int) -> int:
+        sums = defaultdict(int)
+        def traverse(root, level):
+            if not root:
+                return
+            sums[level] += root.val
+            traverse(root.left, level+1)
+            traverse(root.right, level+1)
+        traverse(root, 0)
+        if len(sums) < k:
             return -1
-        return pq[0]
+        return sorted(sums.values(), reverse=True)[k-1]
