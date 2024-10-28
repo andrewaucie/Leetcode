@@ -1,33 +1,32 @@
 class Solution:
     def longestSquareStreak(self, nums: List[int]) -> int:
-        # [2,4,16,256,...]
-        # [3,9,81,6561,..]
-        # [5,25,625,..]
-        # [6,36,..]
-        # [8,64,..]
-        # input = [4,3,6,16,8,2]
         longest = 1
         numMap = {}
         for n in set(nums):
             numMap[n] = [n,n,1]
             if n**2 in numMap:
                 # n marks start of this streak
-                numMap[n**2][0] = n  # update start on next num
                 numMap[n][1] = numMap[n**2][1]  # update end on curr num
                 numMap[n][2] += numMap[n**2][2] # update size
+                numMap[numMap[n**2][0]] = numMap[n]
+                numMap[numMap[n**2][1]] = numMap[n]
 
-            if math.sqrt(n) in numMap:
+            if n**0.5 in numMap:
                 # n marks end of this streak
-                numMap[math.sqrt(n)][1] = n  # update end on prev num
-                numMap[n][0] = numMap[math.sqrt(n)][0]  # update start on curr num
-                numMap[n][2] += numMap[math.sqrt(n)][2] # update size
+                numMap[n][0] = numMap[n**0.5][0]  # update start on curr num
+                numMap[n][2] += numMap[n**0.5][2] # update size
+                numMap[numMap[n**0.5][0]] = numMap[n]
+                numMap[numMap[n**0.5][1]] = numMap[n]
 
-            for adj in (math.sqrt(n), n**2):
-                if adj in numMap:
-                    numMap[numMap[adj][0]] = numMap[n]
-                    numMap[numMap[adj][1]] = numMap[n]
             longest = max(longest, numMap[n][2])
         return longest if longest != 1 else -1
+
+        # [2,4,16,256,...]
+        # [3,9,81,6561,..]
+        # [5,25,625,..]
+        # [6,36,..]
+        # [8,64,..]
+        # input = [4,3,6,16,8,2]
 
         # [3,9,81,6561]
         # {n: [start, end, size]}
