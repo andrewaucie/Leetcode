@@ -24,7 +24,6 @@ class Solution:
 
             for adj in (math.sqrt(n), n**2):
                 if adj in numMap:
-                    print(numMap[adj])
                     numMap[numMap[adj][0]] = numMap[n]
                     numMap[numMap[adj][1]] = numMap[n]
             longest = max(longest, numMap[n][2])
