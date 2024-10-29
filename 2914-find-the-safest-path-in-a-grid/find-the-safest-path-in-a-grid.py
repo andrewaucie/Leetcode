@@ -24,18 +24,20 @@ class Solution:
                     minDist[(x+dx, y+dy)] = dist+1
                     queue.append(((x+dx, y+dy), dist+1))
         
-        maxDist = defaultdict(int)
-        maxDist[(0,0)] = grid[0][0]
-        heap = deque([(0,0)])
+        heap = [(-grid[0][0], (0,0))]
+        visited = set([(0,0)])
         while heap:
-            (x,y) = heap.popleft()
+            dist, (x,y) = heappop(heap)
+            dist *= -1
+            if (x,y) == (n-1,n-1):
+                return dist
             for dx,dy in (0,1),(1,0),(-1,0),(0,-1):
                 if 0 <= x+dx < n and 0 <= y+dy < n:
-                    newDist = min(maxDist[(x,y)], grid[x+dx][y+dy])
-                    if newDist > maxDist[(x+dx, y+dy)]:
-                        maxDist[(x+dx, y+dy)] = newDist
-                        heap.append((x+dx, y+dy))
-        return maxDist[(n-1, n-1)]
+                    if (x+dx, y+dy) not in visited:
+                        visited.add((x+dx, y+dy))
+                        newDist = min(dist, grid[x+dx][y+dy])
+                        heappush(heap, (-newDist, (x+dx, y+dy)))
+        
         # 3 2 1 0
         # 2 3 2 1 
         # 1 2 2 2
