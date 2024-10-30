@@ -19,7 +19,6 @@ class Solution:
             for j in range(i, len(s)):
                 if s[j] not in curr:
                     break
-                print(s[j])
                 curr = curr[s[j]]
                 if '*' in curr:
                     dp[j+1] = True
