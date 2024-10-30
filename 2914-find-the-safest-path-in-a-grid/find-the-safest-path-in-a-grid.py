@@ -1,53 +1,46 @@
 class Solution:
     def maximumSafenessFactor(self, grid: List[List[int]]) -> int:
+        # 0 0 0 1
+        # 0 0 0 0 
+        # 0 0 0 0
+        # 1 0 0 0
+        # greedy "brute force"
+        # look at adjacent cells, compare with thieves, store max distance along path
         if grid[0][0] or grid[-1][-1]:
             return 0
-
-        # pre-filling of 'saferty'-matrix
-        step = 1
-        right = len(grid) -1
-        deq = deque((i, j) for j in range(len(grid)) for i in range(len(grid)) if grid[i][j] == 1)
-        while deq:
-            step += 1
-            for _ in range(len(deq)):
-                i, j = deq.popleft()
-                if i > 0 and grid[i-1][j] == 0:
-                    deq.append((i-1, j))
-                    grid[i-1][j] = step
-                if j > 0 and grid[i][j-1] == 0:
-                    deq.append((i, j-1))
-                    grid[i][j-1] = step
-                if i < right and grid[i+1][j] == 0:
-                    deq.append((i+1, j))
-                    grid[i+1][j] = step
-                if j < right and grid[i][j+1] == 0:
-                    deq.append((i, j+1))
-                    grid[i][j+1] = step
-
-        right = -right
-        used = set()
-        heap = [(-grid[0][0], 0, 0)]
+        n = len(grid)
+        # bfs starting with thieves
+        minDist = defaultdict(lambda: float('inf'))
+        thieves = []
+        for i in range(n):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    minDist[(i,j)] = 0
+                    thieves.append((i,j))
+        queue = deque((thief, 0) for thief in thieves)
+        while queue:
+            (x,y), dist = queue.popleft()
+            grid[x][y] = dist
+            for dx,dy in (0,1),(1,0),(-1,0),(0,-1):
+                if 0 <= x+dx < n and 0 <= y+dy < n and dist + 1 < minDist[(x+dx, y+dy)]:
+                    minDist[(x+dx, y+dy)] = dist+1
+                    queue.append(((x+dx, y+dy), dist+1))
+        
+        heap = [(-grid[0][0], (0,0))]
+        visited = set([(0,0)])
         while heap:
-            dist, i, j = heappop(heap)
-            if (i, j) in used:
-                continue
-            
-            if dist < (tmp := -grid[-i][-j]):
-                dist = tmp
-
-            used.add((i, j))
-            
-            if i == j == right:    # thay all are negative
-                break
-
-            if i < 0:
-                heappush(heap, (dist, i + 1, j))
-            if j < 0:
-                heappush(heap, (dist, i, j + 1))
-            if i > right:
-                heappush(heap, (dist, i - 1, j))
-            if j > right:
-                heappush(heap, (dist, i, j - 1))
-
-        return -dist - 1
- 
+            dist, (x,y) = heappop(heap)
+            dist *= -1
+            if (x,y) == (n-1,n-1):
+                return dist
+            for dx,dy in (0,1),(1,0),(-1,0),(0,-1):
+                if 0 <= x+dx < n and 0 <= y+dy < n:
+                    if (x+dx, y+dy) not in visited:
+                        visited.add((x+dx, y+dy))
+                        newDist = min(dist, grid[x+dx][y+dy])
+                        heappush(heap, (-newDist, (x+dx, y+dy)))
+        
+        # 3 2 1 0
+        # 2 3 2 1 
+        # 1 2 2 2
+        # 0 1 2 3
