@@ -1,7 +1,7 @@
 class UnionFind:
     def __init__(self, n):
         self.parents = [i for i in range(n)]
-        self.friends = [set([i]) for i in range(n)]
+        self.size = [1] * n
     
     def find(self, x):
         if self.parents[x] != x:
@@ -13,7 +13,7 @@ class UnionFind:
         rootY = self.find(y)
         if rootX != rootY:
             self.parents[rootY] = rootX
-            self.friends[rootX] |= self.friends[rootY]
+            self.size[rootX] += self.size[rootY]
 
 class Solution:
     def earliestAcq(self, logs: List[List[int]], n: int) -> int:
@@ -26,6 +26,6 @@ class Solution:
         uf = UnionFind(n)
         for timestamp, a, b in logs:
             uf.union(a, b)
-            if len(uf.friends[uf.find(a)]) == n:
+            if uf.size[uf.find(a)] == n:
                 return timestamp
         return -1
