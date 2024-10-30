@@ -1,17 +1,25 @@
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        wordSet = set(wordDict)
-        cache = {}
-        def dfs(i):
-            if i == len(s):
-                return True
-            if i in cache:
-                return cache[i]
-            takeWord = False
+        trie = {}
+        for word in wordDict:
+            curr = trie
+            for c in word:
+                if c not in curr:
+                    curr[c] = {}
+                curr = curr[c]
+            curr['*'] = True
+        # leetcode
+        # leet code
+        dp = [False] * len(s)
+        for i in range(len(s)):
+            if i > 0 and not dp[i-1]:
+                continue
+            curr = trie
             for j in range(i, len(s)):
-                if s[i:j+1] in wordSet:
-                    takeWord |= dfs(j+1)
-            cache[i] = takeWord
-            return cache[i]
-        return dfs(0)
-
+                if s[j] not in curr:
+                    break
+                print(s[j])
+                curr = curr[s[j]]
+                if '*' in curr:
+                    dp[j] = True
+        return dp[-1]
