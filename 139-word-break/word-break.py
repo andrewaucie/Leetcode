@@ -10,9 +10,10 @@ class Solution:
             curr['*'] = True
         # leetcode
         # leet code
-        dp = [False] * len(s)
+        dp = [False] * (len(s)+1)
+        dp[0] = True
         for i in range(len(s)):
-            if i > 0 and not dp[i-1]:
+            if not dp[i]:
                 continue
             curr = trie
             for j in range(i, len(s)):
@@ -21,5 +22,5 @@ class Solution:
                 print(s[j])
                 curr = curr[s[j]]
                 if '*' in curr:
-                    dp[j] = True
+                    dp[j+1] = True
         return dp[-1]
