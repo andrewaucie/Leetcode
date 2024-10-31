@@ -1,27 +1,28 @@
 class Solution:
     def change(self, amount: int, coins: List[int]) -> int:
-        # Memoization
-        # memo = [[-1] * len(coins) for _ in range(amount+1)]
-        # def memoization(i, k):
-        #     if i == len(coins) or k < 0:
-        #         return 0
-        #     if k == 0:
+        # amount = 5
+        # [0,1,2,3,4,5]
+        # [0,0,0,0,0,0]
+        # [1,2,5]
+        # cache = {}
+        # def dfs(total):
+        #     if total == amount:
         #         return 1
-        #     if memo[k][i] != -1:
-        #         return memo[k][i]
-        #     add = memoization(i, k - coins[i])
-        #     skip = memoization(i+1, k)
-        #     memo[k][i] = add + skip
-        #     return memo[k][i]
-        # return memoization(0, amount)
+        #     if total in cache:
+        #         return cache[total]
+        #     combinations = 0
+        #     for coin in coins:
+        #         for k in range(amount):
+        #             if total + coin*k > amount:
+        #                 break
+        #             combinations += dfs(total + coin*k)
+        #     cache[total] = combinations
+        #     return cache[total]
+        # return dfs(0)
 
-        # DP
-        dp = [[0] * (amount+1) for _ in range(len(coins)+1)]
-        for i in range(len(coins)+1):
-            dp[i][0] = 1
-        for i in range(len(coins)-1, -1, -1):
-            for k in range(1, amount+1):
-                dp[i][k] = dp[i+1][k]
-                if k >= coins[i]:
-                    dp[i][k] += dp[i][k - coins[i]]
-        return dp[0][amount]
+        dp = [0] * (amount + 1)
+        dp[0] = 1
+        for coin in coins:
+            for v in range(coin, amount+1):
+                dp[v] += dp[v - coin]
+        return dp[-1]
