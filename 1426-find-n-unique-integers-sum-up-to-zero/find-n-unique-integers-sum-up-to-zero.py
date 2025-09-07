@@ -1,9 +1,7 @@
 class Solution:
     def sumZero(self, n: int) -> List[int]:
         arr = []
-        for i in range(1, n//2 + 1):
+        for i in range(1, n):
             arr.append(i)
-            arr.append(-i)
-        if n%2 == 1:
-            arr.append(0)
+        arr.append(- n * (n-1) // 2)
         return arr
