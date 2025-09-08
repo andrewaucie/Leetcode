@@ -1,23 +1,20 @@
-from threading import Event
+from threading import Lock
 class FooBar:
     def __init__(self, n):
         self.n = n
-        self.foo_printed = Event()
-        self.bar_printed = Event()
-        self.bar_printed.set()
-
+        self.fooLock = Lock()
+        self.barLock = Lock()
+        self.barLock.acquire()
 
     def foo(self, printFoo: 'Callable[[], None]') -> None:
         for i in range(self.n):
-            self.bar_printed.wait()
-            self.bar_printed.clear()
+            self.fooLock.acquire(blocking=True)
             printFoo()
-            self.foo_printed.set()
+            self.barLock.release()
 
 
     def bar(self, printBar: 'Callable[[], None]') -> None:
         for i in range(self.n):
-            self.foo_printed.wait()
-            self.foo_printed.clear()
+            self.barLock.acquire(blocking=True)
             printBar()
-            self.bar_printed.set()
+            self.fooLock.release()
