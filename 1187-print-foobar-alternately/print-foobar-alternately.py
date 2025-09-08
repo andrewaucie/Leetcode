@@ -1,23 +1,23 @@
-from threading import Condition
+from threading import Event
 class FooBar:
     def __init__(self, n):
         self.n = n
-        self.cond = Condition()
-        self.fooCount = 0
-        self.barCount = 0
+        self.foo_printed = Event()
+        self.bar_printed = Event()
+        self.bar_printed.set()
+
+
     def foo(self, printFoo: 'Callable[[], None]') -> None:
         for i in range(self.n):
-            with self.cond:
-                self.cond.wait_for(lambda: self.fooCount == self.barCount)
-                printFoo()
-                self.fooCount += 1
-                self.cond.notify()
+            self.bar_printed.wait()
+            self.bar_printed.clear()
+            printFoo()
+            self.foo_printed.set()
+
 
     def bar(self, printBar: 'Callable[[], None]') -> None:
         for i in range(self.n):
-            with self.cond:
-                self.cond.wait_for(lambda: self.fooCount-1 == self.barCount)
-                printBar()
-                self.barCount += 1
-                self.cond.notify()
-
+            self.foo_printed.wait()
+            self.foo_printed.clear()
+            printBar()
+            self.bar_printed.set()
