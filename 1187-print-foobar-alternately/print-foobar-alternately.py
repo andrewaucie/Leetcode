@@ -1,20 +1,16 @@
-from threading import Lock
+from threading import Barrier
 class FooBar:
     def __init__(self, n):
         self.n = n
-        self.fooLock = Lock()
-        self.barLock = Lock()
-        self.barLock.acquire()
+        self.barrier = Barrier(2)
 
     def foo(self, printFoo: 'Callable[[], None]') -> None:
         for i in range(self.n):
-            self.fooLock.acquire()
             printFoo()
-            self.barLock.release()
+            self.barrier.wait()
 
 
     def bar(self, printBar: 'Callable[[], None]') -> None:
         for i in range(self.n):
-            self.barLock.acquire()
+            self.barrier.wait()
             printBar()
-            self.fooLock.release()
