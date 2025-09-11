@@ -11,12 +11,12 @@ class Solution:
         #         heapq.heappush(heap, (numFreq, num))
         # return [num for numFreq, num in heap]
         freq = collections.defaultdict(int)
-        buckets = [set() for _ in range(len(nums)+1)]
         for n in nums:
-            if n in freq:
-                buckets[freq[n]].remove(n)
             freq[n] += 1
-            buckets[freq[n]].add(n)
+
+        buckets = [[] for _ in range(len(nums)+1)]
+        for num, numFreq in freq.items():
+            buckets[numFreq].append(num)
         topK = []
         for i in range(len(buckets)-1, -1, -1):
             for n in buckets[i]:
