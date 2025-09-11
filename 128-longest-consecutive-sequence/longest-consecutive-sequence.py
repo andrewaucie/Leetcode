@@ -2,7 +2,7 @@ class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
         longest = 0
         sequences = {}
-        for n in sorted(list(set(nums))):
+        for n in set(nums):
             # { n : [left, right, max] }
             sequences[n] = [n, n, 1]
             leftmost, rightmost = n, n
@@ -26,7 +26,7 @@ class Solution:
             # update max
             sequences[leftmost][2] = sequences[n][2]
             sequences[rightmost][2] = sequences[n][2]
-
+            sequences[rightmost][0] = leftmost
             longest = max(longest, sequences[n][2])
         return longest
             
