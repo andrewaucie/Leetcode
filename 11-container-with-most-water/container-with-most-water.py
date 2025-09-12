@@ -1,12 +1,15 @@
 class Solution:
     def maxArea(self, height: List[int]) -> int:
-        left = 0
-        right = len(height) - 1
-        maxWater = 0
-        while left < right:
-            maxWater = max(maxWater, min(height[right], height[left]) * (right - left))
-            if height[left] < height[right]:
-                left += 1
+        l = 0
+        r = len(height)-1
+        # to maximize the area, we want to maximize height/width
+        # start at max width, 2 pointer inwards
+        maxArea = 0
+        while l < r:
+            currArea = min(height[l], height[r]) * (r - l)
+            maxArea = max(maxArea, currArea)
+            if height[l] < height[r]:
+                l += 1
             else:
-                right -= 1
-        return maxWater
+                r -= 1
+        return maxArea
