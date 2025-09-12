@@ -1,17 +1,13 @@
 class Solution:
     def isPalindrome(self, s: str) -> bool:
-        i, j = 0, len(s) - 1
-
-        while i < j:
-            while i < j and not s[i].isalnum():
-                i += 1
-            while i < j and not s[j].isalnum():
-                j -= 1
-
-            if s[i].lower() != s[j].lower():
-                return False
-
-            i += 1
-            j -= 1
-
-        return True
+        # "A man, a plan, a canal: Panama"
+        # Initial Bruteforce:
+        forward = ""
+        backward = ""
+        for l in s:
+            if l.isalnum():
+                forward += l.lower()
+        for l in reversed(s):
+            if l.isalnum():
+                backward += l.lower()
+        return forward == backward
