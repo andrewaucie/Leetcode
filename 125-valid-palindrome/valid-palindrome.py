@@ -1,13 +1,18 @@
 class Solution:
     def isPalindrome(self, s: str) -> bool:
-        # "A man, a plan, a canal: Panama"
-        # Initial Bruteforce:
-        forward = ""
-        backward = ""
-        for l in s:
-            if l.isalnum():
-                forward += l.lower()
-        for l in reversed(s):
-            if l.isalnum():
-                backward += l.lower()
-        return forward == backward
+
+        # 2 pointer
+        l, r = 0, len(s)-1
+        # potential approach: strip all non-alphanumeric and convert to lowercase
+        while l <= r:
+            if not s[l].isalnum():
+                l += 1
+                continue
+            if not s[r].isalnum():
+                r -= 1
+                continue
+            if s[l].lower() != s[r].lower():
+                return False
+            l += 1
+            r -= 1
+        return True
