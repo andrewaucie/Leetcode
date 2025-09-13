@@ -27,18 +27,9 @@ class NestedIterator:
         self.flatten(nestedList)
     
     def flatten(self, nestedList):
-        #print(nestedList)
-        #print(isinstance(nestedList, list))
-        # [ { [1,1] }, 2, { [1,1] } ]
         if isinstance(nestedList, list):
             for it in nestedList:
                 self.flatten(it)
-                # # { [1,1] }
-                # if it.isInteger():
-                #     self.list.append(it.getInteger())
-                # else:
-                #     for nextList in it.getList():
-                #         self.flatten(nextList)
         elif nestedList.isInteger():
             self.list.append(nestedList.getInteger())
         else:
