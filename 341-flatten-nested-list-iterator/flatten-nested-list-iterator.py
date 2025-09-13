@@ -27,13 +27,11 @@ class NestedIterator:
         self.flatten(nestedList)
     
     def flatten(self, nestedList):
-        if isinstance(nestedList, list):
-            for it in nestedList:
-                self.flatten(it)
-        elif nestedList.isInteger():
-            self.list.append(nestedList.getInteger())
-        else:
-            self.flatten(nestedList.getList())
+        for it in nestedList:
+            if it.isInteger():
+                self.list.append(it.getInteger())
+            else:
+                self.flatten(it.getList())
         
     def next(self) -> int:
         val = self.list[self.index]
