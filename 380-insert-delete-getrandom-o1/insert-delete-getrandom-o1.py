@@ -1,48 +1,40 @@
-class RandomizedSet:
-
+from random import choice
+class RandomizedSet():
     def __init__(self):
-        self.numMap = {}   # { val: index }
-        self.indexMap = {} # { index: val }
-        self.n = 0
+        """
+        Initialize your data structure here.
+        """
+        self.dict = {}
+        self.list = []
 
+        
     def insert(self, val: int) -> bool:
-        if val in self.numMap:
+        """
+        Inserts a value to the set. Returns true if the set did not already contain the specified element.
+        """
+        if val in self.dict:
             return False
-        self.n += 1
-        self.numMap[val] = self.n
-        self.indexMap[self.n] = val
+        self.dict[val] = len(self.list)
+        self.list.append(val)
         return True
+        
 
     def remove(self, val: int) -> bool:
-        if val not in self.numMap:
-            return False
-
-        # get topmost element (val=top, index=self.n)
-        topVal = self.indexMap[self.n]
-
-        # save val's index
-        index = self.numMap[val]
-
-        # delete val's mapping
-        del self.numMap[val]
-        del self.indexMap[index]
-
-        # check if we're not deleting top
-        if index < self.n:
-            # move topmost element into index
-            self.indexMap[index] = topVal
-            self.numMap[topVal] = index
-        self.n -= 1
-        return True
+        """
+        Removes a value from the set. Returns true if the set contained the specified element.
+        """
+        if val in self.dict:
+            # move the last element to the place idx of the element to delete
+            last_element, idx = self.list[-1], self.dict[val]
+            self.list[idx], self.dict[last_element] = last_element, idx
+            # delete the last element
+            self.list.pop()
+            del self.dict[val]
+            return True
+        return False
 
     def getRandom(self) -> int:
-        index = random.randint(1, self.n)
-        return self.indexMap[index]
-
-
-
-# Your RandomizedSet object will be instantiated and called as such:
-# obj = RandomizedSet()
-# param_1 = obj.insert(val)
-# param_2 = obj.remove(val)
-# param_3 = obj.getRandom()
+        """
+        Get a random element from the set.
+        """
+        return choice(self.list)
