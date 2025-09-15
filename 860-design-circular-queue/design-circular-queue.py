@@ -12,11 +12,6 @@ class MyCircularQueue:
         self.k = k
         self.size = 0
 
-    # [1] -> [2] -> [3]
-    # [2] -> [3]
-    # [2] -> [3] -> [4]
-    # { head : val, index : val, rear : val }
-
     def enQueue(self, value: int) -> bool:
         if self.isFull():
             return False
@@ -30,9 +25,6 @@ class MyCircularQueue:
             self.rear = node
         return True
 
-    # [1]
-
-    # [1] -> [2]    
     def deQueue(self) -> bool:
         if self.isEmpty():
             return False
