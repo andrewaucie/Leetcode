@@ -1,14 +1,13 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        longestSub = ""
-        maxSub = 0
-        for i in s:
-            if i not in longestSub:
-                longestSub += i
-            else:
-                maxSub = max(maxSub, len(longestSub))
-                index = longestSub.index(i)
-                longestSub = longestSub[index+1:] + i
-        return max(maxSub, len(longestSub))
-
-# if s[i] != s[i-1] and s[i] not in 
+        freq = collections.defaultdict(int)
+        left, right = 0, 0
+        longestSub = 0
+        while right < len(s):
+            freq[s[right]] += 1
+            while freq[s[right]] > 1:
+                freq[s[left]] -= 1
+                left += 1
+            longestSub = max(longestSub, right - left + 1)
+            right += 1
+        return longestSub
