@@ -1,20 +1,16 @@
 class Solution:
     def checkInclusion(self, s1: str, s2: str) -> bool:
-        if len(s1) > len(s2):
-            return False
-        targetFreq = Counter(s1)
-        currFreq = defaultdict(int)
-        l,r = 0,0
-        while r < len(s2):
-            right = s2[r]
-            currFreq[right] += 1
-            while l <= r and (right not in targetFreq or currFreq[right] > targetFreq[right]):
-                left = s2[l]
-                currFreq[left] -= 1
-                if currFreq[left] == 0:
-                    del currFreq[left]
-                l += 1
-            if targetFreq == currFreq:
+        freq1 = collections.Counter(s1)
+        freq2 = collections.defaultdict(int)
+        left = 0
+        for right in range(len(s2)):
+            freq2[s2[right]] += 1
+            while left <= right and freq2[s2[right]] > freq1[s2[right]]:
+                freq2[s2[left]] -= 1
+                if freq2[s2[left]] == 0:
+                    del freq2[s2[left]]
+                left += 1
+            if freq1 == freq2:
                 return True
-            r += 1
+            right += 1
         return False
