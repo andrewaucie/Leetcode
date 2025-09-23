@@ -1,12 +1,12 @@
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        perms = [[]]
-        for n in nums:
-            new_perms = []
-            for p in perms:
-                for i in range(len(p)+1):
-                    p_copy = p.copy()
-                    p_copy.insert(i, n)
-                    new_perms.append(p_copy)
-            perms = new_perms
-        return perms
+        res = []
+        def backtrack(arr, i):
+            if i == len(arr):
+                res.append(arr[:])
+            for j in range(i, len(arr)):
+                arr[i], arr[j] = arr[j], arr[i]
+                backtrack(arr, i+1)
+                arr[i], arr[j] = arr[j], arr[i]
+        backtrack(nums, 0)
+        return res
