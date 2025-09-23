@@ -20,10 +20,9 @@ class Solution:
         #     if len(numSet) == 1:
         #        return numSet[0]
 
-        circle = list(range(1, n+1))
-        start = 0
+        circle = deque(range(1, n+1))
         while len(circle) > 1:
-            remove = (start + k - 1) % len(circle)
-            circle.pop(remove)
-            start = remove
+            for _ in range(k-1):
+                circle.append(circle.popleft())
+            circle.popleft()
         return circle[0]
