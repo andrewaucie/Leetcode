@@ -1,21 +1,13 @@
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        # result, nums, visited, curr_result
-        result = []
+        if len(nums) == 0:
+            return [[]]
+        perms = self.permute(nums[1:])
+        res = []
 
-        def dfs(result, curr_result, visited):
-            if len(curr_result) == len(nums):
-                result.append(curr_result.copy())
-                return
-            
-            for item in nums:
-                if item not in visited:
-                    curr_result.append(item)
-                    visited.add(item)
-                    dfs(result, curr_result, visited)
-                    visited.remove(item)
-                    curr_result.pop()
-
-        dfs(result, [], set())
-        return result
-        
+        for p in perms:
+            for i in range(len(p)+1):
+                p_copy = p.copy()
+                p_copy.insert(i, nums[0])
+                res.append(p_copy)
+        return res
