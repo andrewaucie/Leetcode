@@ -1,18 +1,15 @@
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
         res = []
-        subset = []
-
-        def create_subset(i):
+        def recurse(i, sub):
+            print(i, sub)
             if i == len(nums):
-                res.append(subset[:])
+                res.append(list(sub))
                 return
-            
-            subset.append(nums[i])
-            create_subset(i+1)
-
-            subset.pop()
-            create_subset(i+1)
-
-        create_subset(0)
+            sub.append(nums[i])
+            recurse(i+1, sub)
+            sub.pop()
+            recurse(i+1, sub)
+        recurse(0, [])
         return res
+            
