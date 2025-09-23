@@ -7,17 +7,32 @@ class Solution:
             graph[v].add(u)
 
         # bfs
-        queue = deque()
-        queue.append(source)
-        visited = set()
-        while queue:
-            curr = queue.popleft()
-            visited.add(curr)
-            if curr == destination:
-                return True
-            for nextEdge in graph[curr]:
-                if nextEdge not in visited:
-                    queue.append(nextEdge)
-        return False
+        # queue = deque()
+        # queue.append(source)
+        # visited = set()
+        # while queue:
+        #     curr = queue.popleft()
+        #     visited.add(curr)
+        #     if curr == destination:
+        #         return True
+        #     for nextEdge in graph[curr]:
+        #         if nextEdge not in visited:
+        #             queue.append(nextEdge)
+        # return False
 
         # dfs
+        visited = set()
+        def dfs(node):
+            if node == destination:
+                return True
+            if node in visited:
+                return False
+            visited.add(node)
+            exists = False
+            for nextEdge in graph[node]:
+                if nextEdge not in visited:
+                    exists |= dfs(nextEdge)
+            return exists
+        return dfs(source)
+        
+
