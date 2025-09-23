@@ -20,20 +20,10 @@ class Solution:
         #     if len(numSet) == 1:
         #        return numSet[0]
 
-        nums = set([i for i in range(n)])
-        ptr = 0
-        while len(nums) > 1:
-            # traverse k friends
-            currK = 1
-            while currK < k:
-                ptr = (ptr + 1) % n
-                if ptr in nums:
-                    currK += 1
-            # currK == k, remove this num
-            nums.remove(ptr)
-            # find next valid friend
-            while True:
-                if ptr in nums:
-                    break
-                ptr = (ptr + 1) % n
-        return nums.pop() + 1
+        circle = list(range(1, n+1))
+        start = 0
+        while len(circle) > 1:
+            remove = (start + k - 1) % len(circle)
+            circle.pop(remove)
+            start = remove
+        return circle[0]
