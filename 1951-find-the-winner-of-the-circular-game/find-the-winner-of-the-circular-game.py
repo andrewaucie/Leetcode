@@ -20,9 +20,9 @@ class Solution:
         #     if len(numSet) == 1:
         #        return numSet[0]
 
-        circle = deque(range(1, n+1))
-        while len(circle) > 1:
-            for _ in range(k-1):
-                circle.append(circle.popleft())
-            circle.popleft()
-        return circle[0]
+        def recurse(n, k):
+            if n == 1:
+                return 0
+            return (recurse(n-1, k) + k) % n
+        return recurse(n, k) + 1
+            
